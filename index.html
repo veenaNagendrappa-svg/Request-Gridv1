@@ -140,29 +140,47 @@ body{
 .btn-mf-clear{height:36px;padding:0 16px;border:1px solid #bbb;border-radius:4px;background:white;font-family:inherit;font-size:13px;cursor:pointer}
 .btn-mf-apply{height:36px;padding:0 20px;background:#1976d2;color:white;border:1px solid #1976d2;border-radius:4px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer}
 
-/* ── SUMMARY BAR ── */
-.summary-bar{
-  display:flex;align-items:stretch;background:white;
-  border-bottom:1px solid #e0e0e0;flex-shrink:0;
+/* ── SELECTOR PILLS — bordered semantic, matching existing status colours ── */
+.sel-pill{
+  display:inline-flex;align-items:center;gap:3px;
+  padding:1px 7px;border-radius:9px;font-size:11px;font-weight:500;
+  margin-right:3px;white-space:nowrap;vertical-align:middle;
+  background:#f0f0f0;color:#333;border:1px solid #ccc;
 }
-.summary-card{
-  flex:1;padding:10px 16px;cursor:pointer;
-  border-right:1px solid #e8e8e8;transition:background .12s;
-  display:flex;flex-direction:column;gap:2px;position:relative;
+/* Per-status bordered semantic styles */
+.sel-pill-pending{background:#fde8e8;color:#7f0000;border-color:#ef9a9a}
+.sel-pill-offered{background:#fff8e1;color:#5f3800;border-color:#ffe082}
+.sel-pill-allocated{background:#e3f2fd;color:#0d2f6e;border-color:#90caf9}
+.sel-pill-rejected{background:#f5f5f5;color:#555;border-color:#bdbdbd}
+.sel-pill-completed{background:#e8f5e9;color:#1b5e20;border-color:#a5d6a7}
+.sel-pill-withdrawn-ep,
+.sel-pill-withdrawn-student{background:#f5f5f5;color:#555;border-color:#bdbdbd}
+.sel-pill-more{
+  display:inline-flex;align-items:center;
+  padding:1px 6px;border-radius:9px;font-size:11px;font-weight:600;
+  background:#f0f0f0;color:#555;border:1px solid #ccc;vertical-align:middle;
 }
-.summary-card:last-child{border-right:none}
-.summary-card:hover{background:#f5f7ff}
-.summary-card.active{background:#f0f4ff}
-.summary-card.active::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;
-  height:2px;background:#1976d2;
+/* Status dropdown — tall enough, select all pinned at top */
+#msStatusDd{max-height:300px}
+#msStatusDd .ms-select-all{position:sticky;top:0;background:white;z-index:1;border-bottom:1px solid #eee}
+.status-indicator-bar{
+  display:flex;align-items:center;gap:8px;
+  padding:6px 16px;background:white;
+  border-bottom:1px solid #e8e8e8;flex-shrink:0;
+  min-height:34px;
 }
-.summary-card-val{font-size:20px;font-weight:500;color:#1a1d23;line-height:1}
-.summary-card-lbl{font-size:11px;color:#888;white-space:nowrap}
-.summary-card.s-pending .summary-card-val{color:#c62828}
-.summary-card.s-offered .summary-card-val{color:#e65100}
-.summary-card.s-rejected .summary-card-val{color:#555}
-.summary-card-action{margin-left:auto;align-self:center}
+.si-text{font-size:12px;color:#555;font-weight:400;white-space:nowrap}
+/* Status dropdown options with colour dots */
+.ms-option .ms-status-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+  display:inline-block;margin-right:2px;vertical-align:middle;
+}
+.ms-opt-dot-pending{background:#c62828}
+.ms-opt-dot-offered{background:#e65100}
+.ms-opt-dot-rejected{background:#757575}
+.ms-opt-dot-allocated{background:#1565c0}
+.ms-opt-dot-completed{background:#2e7d32}
+.ms-opt-dot-withdrawn{background:#757575}
 .btn-alloc-reqs{
   height:30px;padding:0 14px;border:1.5px solid #1976d2;
   border-radius:4px;background:white;color:#1976d2;
@@ -351,6 +369,65 @@ th,td{border:1px solid #e8e8e8;padding:0}
 .td-sub-num.wknd{background:#f5f5f5;color:#aaa;text-decoration:none;cursor:default}
 /* Demand indicator on shift sub-row cells */
 .td-sub-num-wrap{display:flex;flex-direction:column;align-items:center;gap:1px}
+/* ── PLACEMENT ROW ── */
+/* ── Placement section: left accent border connects label + all lane rows ── */
+.tr-plc-row td:first-child{border-left:3px solid #7aaaf0}
+.tr-plc-row td{background:#eff5ff}
+.tr-plc-row:hover td{background:#e6eeff}
+/* Lane separator — border-bottom on each row except last */
+.tr-plc-row:not(:last-of-type) td{border-bottom:1px solid #d4e4ff}
+.td-plc-row-name{
+  position:sticky;left:0;background:inherit;z-index:5;
+  border-right:2px solid #ddd;
+  padding:4px 6px 4px 0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;
+}
+.plc-row-inner{display:flex;align-items:center;gap:5px;padding:2px 6px;width:100%}
+.plc-row-lbl{font-size:11px;font-weight:500;color:#444;flex:1}
+.plc-row-view{
+  display:flex;align-items:center;gap:4px;
+  opacity:0;pointer-events:none;
+  cursor:pointer;
+  font-size:11px;font-family:inherit;
+  font-weight:500;letter-spacing:0.04em;
+  padding:3px 10px;border-radius:4px;
+  white-space:nowrap;
+  color:#fff;
+  background:var(--mat-button-protected-label-text-color,var(--mat-sys-primary,#1976d2));
+  border:none;
+  box-shadow:0 1px 3px rgba(0,0,0,0.25),0 1px 2px rgba(0,0,0,0.15);
+  transition:opacity 0.15s ease,box-shadow 0.15s ease;
+}
+.tr-plc-row:hover .plc-row-view{opacity:1;pointer-events:all}
+.plc-row-view:hover{box-shadow:0 2px 6px rgba(0,0,0,0.28),0 2px 4px rgba(0,0,0,0.18)}
+.td-plc-row-cell{
+  vertical-align:top;padding:2px 3px;
+  border-right:1px solid #e8e8e8;
+  font-size:10px;line-height:1.4;
+  background:inherit;
+}
+.td-plc-row-cell.wknd{background:#ececec}
+.plc-ep-chip{
+  display:block;
+  white-space:nowrap;
+  color:#333;
+  padding:1px 0;
+}
+.plc-ep-span{
+  display:block;
+  background:#dce8ff;
+  border:1px solid #b3ccf5;
+  border-radius:3px;
+  padding:1px 5px;
+  font-size:10px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  color:#1a3a6b;
+}
+.plc-ep-clickable{cursor:pointer}
+.plc-ep-clickable:hover{background:#c2d6f8;border-color:#7aaaf0}
+.td-plc-row-cell.plc-ep-has-data{padding:2px 2px}
 .sub-cap-val{font-size:12px;color:#1976d2;line-height:1.3;text-decoration:underline}
 .sub-cap-val.neg{color:#c62828}
 .sub-demand{
@@ -370,6 +447,21 @@ th,td{border:1px solid #e8e8e8;padding:0}
 }
 /* Req label — ID + subtext matching Allocation Options style */
 .req-lbl-wrap{display:flex;flex-direction:column;gap:2px}
+/* Condensed mode */
+.condensed .req-lbl-wrap{flex-direction:row;align-items:center;gap:5px}
+.condensed .req-lbl-sub{display:none}
+.condensed .td-req-name{padding-top:2px;padding-bottom:2px}
+.condensed .tr-req td{line-height:1.2}
+.req-lbl-condensed-date{display:none;font-size:10px;color:#888;white-space:nowrap}
+.condensed .req-lbl-condensed-date{display:inline}
+.req-lbl-sub-tooltip{
+  display:none;position:absolute;left:8px;top:100%;margin-top:2px;
+  background:#333;color:#fff;font-size:10px;padding:3px 7px;border-radius:3px;
+  white-space:nowrap;z-index:100;pointer-events:none;
+  box-shadow:0 2px 6px rgba(0,0,0,0.25);
+}
+.condensed .td-req-name{position:relative}
+.condensed .td-req-name:hover .req-lbl-sub-tooltip{display:block}
 .req-roster-badge{display:none}
 .req-lbl-top{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
 .req-lbl-link{
@@ -1192,95 +1284,233 @@ canvas#epChart{display:block;width:100%}
 .alloc-grid-helper.show{display:flex;}
 
 .alloc-body-wrap{display:flex;flex:1;min-height:0;overflow:hidden;}
+.alloc-screen-wrap{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;position:relative;}
 
-/* ══ PLACEMENT RAIL ══ */
-.placement-rail{
-  width:0;flex-shrink:0;overflow:hidden;
-  background:white;border-left:1px solid #e5e7eb;
-  display:flex;flex-direction:column;
-  transition:width .3s cubic-bezier(.4,0,.2,1);
+
+/* ══ BOTTOM PLACEMENT WORKSPACE ══════════════════════ */
+/* States: hidden | collapsed (48px bar) | expanded (35vh) */
+
+.alloc-body-wrap{display:flex;flex:1;min-height:0;overflow:hidden;}
+.alloc-screen-wrap{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;position:relative;}
+
+.placement-tray{
+  flex-shrink:0;
+  background:white;
+  border-top:2px solid #c7deff;
+  box-shadow:0 -2px 12px rgba(37,99,235,.07);
+  display:none;
+  flex-direction:column;
+  z-index:60;
 }
-.placement-rail.open{width:272px;}
-.pr-header{
-  padding:11px 14px 9px;border-bottom:1px solid #e5e7eb;
-  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+.placement-tray.visible{display:flex;}
+
+/* ── Collapsed bar ── */
+.pt-collapsed-bar{
+  height:48px;display:flex;align-items:center;padding:0 16px;gap:14px;
+  cursor:pointer;user-select:none;flex-shrink:0;
 }
-.pr-title{font-size:12px;font-weight:700;color:#111827;}
-.pr-collapse{background:none;border:none;cursor:pointer;color:#9ca3af;padding:0;display:flex;align-items:center;transition:color .15s;}
-.pr-collapse:hover{color:#374151;}
-.pr-summary{
-  padding:8px 14px 9px;border-bottom:1px solid #f3f4f6;
-  display:flex;gap:14px;flex-shrink:0;
+.pt-collapsed-bar:hover{background:#f8faff;}
+.pt-cb-icon{color:#2563eb;display:flex;align-items:center;flex-shrink:0;}
+.pt-cb-title{font-size:12px;font-weight:700;color:#111827;white-space:nowrap;}
+.pt-cb-chips{display:flex;gap:6px;flex:1;}
+.pt-cb-chip{
+  height:22px;padding:0 10px;border-radius:999px;font-size:10px;font-weight:600;
+  display:flex;align-items:center;gap:4px;white-space:nowrap;
 }
-.pr-sum-item{display:flex;flex-direction:column;gap:1px;}
-.pr-sum-val{font-size:14px;font-weight:700;color:#111827;line-height:1;}
-.pr-sum-lbl{font-size:9px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;}
-.pr-sum-val.rem{color:#d97706;}
-.pr-body{flex:1;overflow-y:auto;padding:8px 0;}
-.pr-section-lbl{
-  font-size:9px;font-weight:700;color:#9ca3af;
-  text-transform:uppercase;letter-spacing:.07em;
-  padding:6px 14px 4px;
+.pt-cb-chip.drafts{background:#dbeafe;color:#1d4ed8;}
+.pt-cb-chip.rotations{background:#f5f3ff;color:#7c3aed;}
+.pt-cb-chip.offered{background:#fef3c7;color:#92400e;}
+.pt-cb-chip.empty{background:#f3f4f6;color:#9ca3af;}
+.pt-cb-remaining{
+  font-size:11px;font-weight:700;color:#d97706;
+  background:#fef3c7;border-radius:999px;padding:2px 10px;white-space:nowrap;
 }
-/* Draft card */
-.pr-card{
-  margin:3px 10px;border-radius:6px;
-  border:1px solid #e2e8f0;border-left:3px solid #2563eb;
-  background:#f8faff;font-size:11px;color:#1e3a5f;
-  transition:box-shadow .15s;
+.pt-cb-remaining.done{color:#15803d;background:#dcfce7;}
+.pt-cb-expand{
+  height:28px;padding:0 10px;border:1px solid #e2e8f0;border-radius:5px;
+  background:white;cursor:pointer;color:#6b7280;font-family:inherit;
+  font-size:10px;font-weight:600;display:flex;align-items:center;gap:5px;
+  transition:all .15s;flex-shrink:0;
 }
-.pr-card:hover{box-shadow:0 1px 6px rgba(37,99,235,.12);}
-.pr-card.offered{border-left-color:#f59e0b;background:#fffdf0;}
-.pr-card.published{border-left-color:#16a34a;background:#f0fdf4;}
-.pr-card-hdr{
-  display:flex;align-items:center;gap:6px;
-  padding:7px 10px 5px;cursor:pointer;user-select:none;
+.pt-cb-expand:hover{border-color:#2563eb;color:#2563eb;}
+.pt-cb-chevron{transition:transform .22s;}
+.placement-tray.expanded .pt-cb-chevron{transform:rotate(180deg);}
+
+/* ── Expanded panel ── */
+.pt-expanded{
+  display:none;
+  flex-direction:column;
+  border-top:1px solid #e5e7eb;
+  height:35vh;min-height:200px;max-height:480px;
+  overflow:hidden;
+  resize:vertical; /* native drag resize */
 }
-.pr-card-title{font-weight:700;font-size:11px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.pr-card-badge{
-  font-size:9px;font-weight:700;padding:1px 6px;border-radius:999px;white-space:nowrap;flex-shrink:0;
+.placement-tray.expanded .pt-expanded{display:flex;}
+
+/* Tab bar */
+.pt-tabs{
+  display:flex;align-items:center;gap:0;
+  border-bottom:1px solid #e5e7eb;padding:0 14px;flex-shrink:0;
+  background:#fafafa;
 }
-.pr-card-badge.draft{background:#dbeafe;color:#1d4ed8;}
-.pr-card-badge.offered{background:#fef3c7;color:#92400e;}
-.pr-card-badge.published{background:#dcfce7;color:#15803d;}
-.pr-card-menu{background:none;border:none;cursor:pointer;color:#cbd5e1;font-size:16px;line-height:1;padding:0 2px;flex-shrink:0;transition:color .15s;}
-.pr-card-menu:hover{color:#374151;}
-.pr-card-body{padding:0 10px 8px;display:flex;flex-direction:column;gap:3px;}
-.pr-card-row{display:flex;justify-content:space-between;align-items:baseline;gap:4px;}
-.pr-card-lbl{font-size:9.5px;color:#94a3b8;font-weight:500;}
-.pr-card-val{font-size:11px;color:#1e293b;font-weight:500;text-align:right;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.pr-card-actions{display:flex;gap:5px;padding:5px 10px 8px;border-top:1px solid #f1f5f9;margin-top:2px;}
-.pr-card-act{
-  height:22px;padding:0 9px;border-radius:3px;font-family:inherit;font-size:10px;font-weight:600;cursor:pointer;
-  border:1px solid #e2e8f0;background:white;color:#374151;transition:all .15s;
+.pt-tab{
+  height:36px;padding:0 14px;font-size:11px;font-weight:600;color:#9ca3af;
+  background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;
+  font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:5px;
+  margin-bottom:-1px;white-space:nowrap;
 }
-.pr-card-act:hover{border-color:#2563eb;color:#2563eb;background:#eff6ff;}
-.pr-card-act.danger{color:#dc2626;border-color:#fecaca;}
-.pr-card-act.danger:hover{background:#fef2f2;border-color:#dc2626;}
-.pr-footer{
-  border-top:1px solid #e5e7eb;padding:10px 12px;flex-shrink:0;
-  display:flex;flex-direction:column;gap:6px;
+.pt-tab:hover{color:#374151;}
+.pt-tab.active{color:#2563eb;border-bottom-color:#2563eb;}
+.pt-tab.rotation-active{color:#7c3aed;border-bottom-color:#7c3aed;}
+.pt-tab-count{
+  font-size:9px;font-weight:700;padding:1px 5px;border-radius:999px;
+  background:#f3f4f6;color:#6b7280;
 }
-.pr-footer-summary{font-size:10px;color:#6b7280;line-height:1.4;}
-.pr-footer-actions{display:flex;gap:6px;}
-.btn-pr-clear{
-  height:30px;padding:0 10px;border:1px solid #e2e8f0;border-radius:5px;
-  background:white;font-family:inherit;font-size:10px;font-weight:600;color:#6b7280;cursor:pointer;
-  transition:all .15s;white-space:nowrap;
+.pt-tab.active .pt-tab-count{background:#dbeafe;color:#1d4ed8;}
+.pt-tab.rotation-active .pt-tab-count{background:#f5f3ff;color:#7c3aed;}
+.pt-tabs-spacer{flex:1;}
+.pt-tabs-counter{
+  font-size:10px;color:#6b7280;padding:0 4px;
+  display:flex;align-items:center;gap:12px;
 }
-.btn-pr-clear:hover{border-color:#dc2626;color:#dc2626;}
-.btn-pr-review{
-  flex:1;height:30px;border:none;border-radius:5px;
-  background:#2563eb;color:white;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;
-  transition:background .15s;white-space:nowrap;
+.pt-ctr{display:flex;align-items:baseline;gap:3px;}
+.pt-ctr-val{font-size:14px;font-weight:700;color:#111827;}
+.pt-ctr-val.rem{color:#d97706;}
+.pt-ctr-val.done{color:#16a34a;}
+.pt-ctr-lbl{font-size:9px;color:#9ca3af;text-transform:uppercase;letter-spacing:.04em;}
+
+/* Body */
+.pt-body{flex:1;overflow-y:auto;padding:0;}
+
+/* ── Grouped list ── */
+.pt-agency-group{border-bottom:1px solid #f1f5f9;}
+.pt-agency-hdr{
+  display:flex;align-items:center;gap:8px;padding:6px 14px 5px;
+  background:#fafafa;position:sticky;top:0;z-index:2;cursor:pointer;
+  border-bottom:1px solid #f1f5f9;
 }
-.btn-pr-review:hover{background:#1d4ed8;}
-.btn-pr-review:disabled{background:#93c5fd;cursor:not-allowed;}
-/* empty rail state */
-.pr-empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:32px 20px;gap:8px;}
-.pr-empty-icon{color:#d1d5db;}
-.pr-empty-title{font-size:12px;font-weight:600;color:#9ca3af;}
-.pr-empty-sub{font-size:10px;color:#cbd5e1;line-height:1.5;}
+.pt-agency-hdr:hover{background:#f0f7ff;}
+.pt-agency-name{font-size:11px;font-weight:700;color:#1e293b;flex:1;}
+.pt-agency-count{font-size:9px;background:#e2e8f0;color:#64748b;padding:1px 7px;border-radius:999px;font-weight:600;}
+.pt-agency-chevron{color:#9ca3af;font-size:10px;transition:transform .15s;}
+.pt-agency-group.collapsed .pt-agency-chevron{transform:rotate(-90deg);}
+.pt-agency-group.collapsed .pt-rows{display:none;}
+.pt-rows{}
+
+/* Placement row */
+.pt-row{
+  display:flex;align-items:center;gap:0;
+  padding:0 14px;height:34px;border-bottom:1px solid #f8faff;
+  font-size:11px;cursor:pointer;transition:background .1s;
+}
+.pt-row:hover{background:#f0f7ff;}
+.pt-row:hover .pt-row-actions{opacity:1;}
+.pt-row.selected{background:#eff6ff;}
+.pt-row-id{font-size:10px;font-weight:600;color:#3b82f6;width:56px;flex-shrink:0;font-family:monospace;}
+.pt-row-shift{flex:1;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pt-row-dates{width:120px;flex-shrink:0;color:#64748b;font-size:10px;text-align:right;}
+.pt-row-status{width:70px;flex-shrink:0;display:flex;justify-content:flex-end;}
+.pt-row-actions{opacity:0;display:flex;gap:4px;width:90px;flex-shrink:0;justify-content:flex-end;transition:opacity .15s;}
+.pt-row-act{
+  height:20px;padding:0 7px;border-radius:3px;font-family:inherit;
+  font-size:9px;font-weight:600;border:1px solid #e2e8f0;
+  background:white;color:#374151;cursor:pointer;transition:all .1s;
+}
+.pt-row-act:hover{border-color:#2563eb;color:#2563eb;}
+.pt-row-act.danger{border-color:#fecaca;color:#dc2626;}
+.pt-row-act.danger:hover{background:#fef2f2;}
+.sbadge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:999px;}
+.sbadge.draft{background:#dbeafe;color:#1d4ed8;}
+.sbadge.offered{background:#fef3c7;color:#92400e;}
+.sbadge.published{background:#dcfce7;color:#15803d;}
+.sbadge.rotation{background:#f5f3ff;color:#7c3aed;}
+
+/* ── Rotation composition mode ── */
+.pt-composition{display:none;flex-direction:column;height:100%;}
+.pt-composition.active{display:flex;}
+.pt-comp-split{display:flex;flex:1;min-height:0;}
+.pt-comp-timeline{flex:1;border-right:1px solid #e5e7eb;display:flex;flex-direction:column;overflow:hidden;}
+.pt-comp-exposure{width:240px;flex-shrink:0;display:flex;flex-direction:column;overflow:hidden;}
+.pt-comp-hdr{padding:7px 12px 5px;font-size:9px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid #f1f5f9;flex-shrink:0;}
+.pt-comp-body{flex:1;overflow-y:auto;padding:4px 0;}
+.pt-tl-row{
+  display:flex;align-items:center;gap:8px;padding:4px 12px;
+  border-bottom:1px solid #fafafa;font-size:11px;
+}
+.pt-tl-day{width:28px;font-size:10px;font-weight:600;color:#94a3b8;flex-shrink:0;}
+.pt-tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.pt-tl-type{flex:1;color:#1e293b;}
+.pt-tl-agency{font-size:9px;color:#94a3b8;text-align:right;}
+.pt-tl-rm{background:none;border:none;cursor:pointer;color:#e2e8f0;font-size:13px;padding:0;transition:color .1s;}
+.pt-tl-rm:hover{color:#dc2626;}
+.pt-exp-row{display:flex;align-items:center;gap:8px;padding:4px 12px;}
+.pt-exp-type{flex:1;font-size:10px;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pt-exp-bar-wrap{width:50px;height:4px;background:#f1f5f9;border-radius:999px;}
+.pt-exp-bar{height:4px;border-radius:999px;background:#7c3aed;}
+.pt-exp-days{font-size:9px;font-weight:600;color:#64748b;width:32px;text-align:right;white-space:nowrap;}
+.pt-comp-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#d1d5db;gap:6px;padding:16px;text-align:center;}
+.pt-comp-empty p{font-size:10px;color:#cbd5e1;line-height:1.5;}
+
+/* ── Footer ── */
+.pt-footer{
+  display:flex;align-items:center;gap:8px;padding:8px 14px;
+  border-top:1px solid #e5e7eb;flex-shrink:0;background:white;
+}
+.pt-footer-left{font-size:10px;color:#6b7280;flex:1;}
+.btn-pt-save-rot{
+  height:32px;padding:0 16px;border:none;border-radius:5px;
+  background:#7c3aed;color:white;font-family:inherit;font-size:11px;font-weight:700;
+  cursor:pointer;transition:background .15s;display:none;
+}
+.btn-pt-save-rot:hover{background:#6d28d9;}
+.btn-pt-save-rot.show{display:block;}
+.btn-pt-clear-sel{
+  height:32px;padding:0 12px;border:1px solid #e2e8f0;border-radius:5px;
+  background:white;font-family:inherit;font-size:11px;font-weight:600;color:#6b7280;
+  cursor:pointer;transition:all .15s;display:none;
+}
+.btn-pt-clear-sel.show{display:block;}
+.btn-pt-clear-sel:hover{border-color:#dc2626;color:#dc2626;}
+.btn-pt-clear{
+  height:32px;padding:0 12px;border:1px solid #e2e8f0;border-radius:5px;
+  background:white;font-family:inherit;font-size:11px;font-weight:600;color:#6b7280;
+  cursor:pointer;transition:all .15s;
+}
+.btn-pt-clear:hover{border-color:#dc2626;color:#dc2626;}
+.btn-pt-reject{
+  height:32px;padding:0 12px;border:1px solid #fca5a5;border-radius:5px;
+  background:white;font-family:inherit;font-size:11px;font-weight:600;color:#dc2626;
+  cursor:pointer;transition:all .15s;display:none;
+}
+.btn-pt-reject.show{display:block;}
+.btn-pt-reject:hover{background:#fef2f2;}
+.btn-pt-review{
+  height:32px;padding:0 18px;border:none;border-radius:5px;
+  background:#2563eb;color:white;font-family:inherit;font-size:11px;font-weight:700;
+  cursor:pointer;transition:background .15s;
+}
+.btn-pt-review:hover{background:#1d4ed8;}
+.btn-pt-review:disabled{background:#93c5fd;cursor:not-allowed;}
+
+/* hide old tray pieces */
+.pr-card{display:none!important;}
+.pr-empty{display:none!important;}
+.placement-rail{display:none!important;}
+/* ── Slim bottom bar (restored) ── */
+.alloc-bottom-bar{
+  flex-shrink:0;background:white;border-top:1px solid #e2e8f0;
+  padding:7px 16px;display:none;align-items:center;gap:12px;
+  box-shadow:0 -2px 8px rgba(0,0,0,.06);
+}
+.alloc-bottom-bar.show{display:flex;}
+.abb-status{font-size:12px;font-weight:500;color:#1e293b;flex:1;}
+.btn-abb-clear{height:30px;padding:0 14px;border:1px solid #e2e8f0;border-radius:5px;background:white;font-family:inherit;font-size:11px;font-weight:600;color:#6b7280;cursor:pointer;transition:all .15s;}
+.btn-abb-clear:hover{border-color:#dc2626;color:#dc2626;}
+.btn-abb-review{height:30px;padding:0 16px;border:none;border-radius:5px;background:#2563eb;color:white;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;transition:background .15s;}
+.btn-abb-review:hover{background:#1d4ed8;}
+/* suppress big tray */
+.placement-tray{display:none!important;}
+
 
 /* ══ ROTATION RAIL ══ */
 .rotation-rail{
@@ -1439,18 +1669,153 @@ body.rotation-mode .ward-alloc-badge{display:none!important;}
 .btn-sp-generate{flex:1;height:36px;border:none;background:#2563eb;border-radius:6px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:white;}
 .btn-sp-generate:hover{background:#1d4ed8;}
 
-.alloc-bottom-bar{display:none!important;}
-  position:sticky;bottom:0;
-  background:white;border-top:2px solid #c7deff;
-  z-index:50;display:none;width:100%;
+.alloc-bottom-bar{display:none;}
+
+/* ── Cell placement summary (offered/published) ── */
+.ag-cell-plc-summary{
+  font-size:9px;font-weight:600;color:#1d4ed8;line-height:1.2;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:100%;display:block;
 }
-.alloc-bottom-bar.show{display:block;}
-.abb-inner{padding:8px 8px 8px 16px;display:flex;align-items:center;gap:10px;}
-.abb-status{font-size:12px;font-weight:500;color:#003179;flex:1;}
-.btn-abb-clear{height:32px;padding:0 12px;border:1px solid #ddd;background:white;border-radius:5px;cursor:pointer;font-family:inherit;font-size:12px;color:#555;transition:color .15s,border-color .15s;}
-.btn-abb-clear:hover{color:#dc2626;border-color:#fca5a5;}
-.btn-abb-review{height:32px;padding:0 16px;border:none;background:#2563eb;border-radius:5px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:white;transition:background .15s;}
-.btn-abb-review:hover{background:#1d4ed8;}
+.ag-cell-plc-summary.has-offered{color:#92400e;}
+.ag-cell-plc-summary.has-published{color:#15803d;}
+
+/* ── Cell hover — view placements bar ── */
+/* ── Cell hover popover — rich with buttons ── */
+.ag-cell{position:relative;}
+.ag-cell-hover-bar{display:none;}
+.ag-cell-popover{
+  display:none;position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);
+  background:white;border:1px solid #e2e8f0;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:200;
+  min-width:160px;padding:6px;
+  flex-direction:column;gap:4px;
+}
+.ag-cell:hover .ag-cell-popover{display:flex;}
+.ag-cell-popover::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:5px solid transparent;border-top-color:#e2e8f0;
+}
+.ag-cell-popover::before{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:4px solid transparent;border-top-color:white;margin-top:-1px;z-index:1;
+}
+.ag-cell-pop-title{font-size:9px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;padding:2px 4px 4px;border-bottom:1px solid #f1f5f9;margin-bottom:2px;}
+.ag-cell-pop-btn{
+  display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:5px;
+  font-size:11px;font-weight:500;color:#374151;cursor:pointer;
+  border:none;background:none;font-family:inherit;width:100%;text-align:left;
+  transition:background .1s;white-space:nowrap;
+}
+.ag-cell-pop-btn:hover{background:#f0f7ff;color:#2563eb;}
+.ag-cell-pop-btn.primary{background:#2563eb;color:white;font-weight:600;}
+.ag-cell-pop-btn.primary:hover{background:#1d4ed8;}
+
+/* ── Agency row placement summary (standard mode) ── */
+/* Agency placement subtext — sits under agency name inline */
+.ag-plc-subtext{
+  display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-top:1px;position:relative;
+}
+.ag-plc-view-trigger{
+  font-size:9px;color:#2563eb;cursor:pointer;white-space:nowrap;margin-left:2px;
+  padding:1px 5px;border-radius:3px;border:1px solid #bfdbfe;background:white;
+  transition:background .12s;
+}
+.ag-plc-view-trigger:hover{background:#eff6ff;}
+.ps-chip{font-size:9px;font-weight:600;padding:1px 6px;border-radius:999px;white-space:nowrap;}
+.ps-chip.offered{background:#fef3c7;color:#92400e;}
+.ps-chip.published{background:#dcfce7;color:#15803d;}
+.ps-chip.draft{background:#dbeafe;color:#1d4ed8;}
+
+/* ── View Placements side sheet ── */
+.vp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:290;display:none;}
+.vp-overlay.open{display:block;}
+.vp-sheet{
+  position:fixed;top:0;right:0;bottom:0;width:380px;
+  background:white;box-shadow:-4px 0 24px rgba(0,0,0,.12);
+  z-index:300;transform:translateX(100%);
+  transition:transform .25s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+}
+.vp-sheet.open{transform:translateX(0);}
+.vp-hdr{padding:14px 16px 10px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.vp-title{font-size:13px;font-weight:700;color:#111827;}
+.vp-sub{font-size:11px;color:#6b7280;margin-top:1px;}
+.vp-close{background:none;border:none;cursor:pointer;color:#9ca3af;font-size:20px;line-height:1;padding:0;}
+.vp-close:hover{color:#374151;}
+.vp-body{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:4px;}
+.vp-card{
+  border-radius:6px;border:1px solid #e8e8e8;
+  border-left:3px solid #90caf9;
+  background:#f9f9f9;
+  padding:9px 12px;
+}
+.vp-card.accepted{border-left-color:#1976d2;}
+.vp-card.published{border-left-color:#43a047;}
+.vp-card.offered{border-left-color:#fb8c00;}
+.vp-card-hdr{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:2px;}
+.vp-card-id{font-size:12px;font-weight:500;color:#1976d2;}
+.vp-card-title{font-size:11px;font-weight:600;color:#1e293b;flex:1;}
+.vp-card-badge{
+  font-size:9px;font-weight:500;
+  padding:1px 7px;border-radius:8px;
+  white-space:nowrap;flex-shrink:0;
+  background:#efefef;color:#777;
+}
+.vp-card-rows{display:flex;flex-direction:column;gap:2px;}
+.vp-card-row{display:flex;gap:6px;font-size:10px;}
+.vp-card-lbl{color:#9ca3af;width:52px;flex-shrink:0;}
+.vp-card-val{color:#374151;}
+.vp-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#d1d5db;gap:8px;text-align:center;}
+.vp-empty p{font-size:11px;color:#9ca3af;}
+.vp-card-ep{font-size:11px;font-weight:600;color:#1e293b;line-height:1.4}
+.vp-card-meta{font-size:10px;color:#64748b;display:flex;align-items:center;gap:3px;flex-wrap:wrap;line-height:1.5;}
+.vp-card-meta .sep{color:#d1d5db}
+.vp-card-rotation{display:flex;align-items:center;gap:4px;font-size:10px;color:#7c3aed;font-weight:500;margin-top:2px;}
+.vp-card-rotation svg{width:10px;height:10px;fill:#7c3aed;flex-shrink:0}
+.vp-card-req{
+  display:flex;align-items:center;gap:5px;
+  font-size:10px;color:#9ca3af;margin-top:4px;
+  padding-top:4px;border-top:1px solid #efefef;
+}
+.vp-card-req-num{font-weight:500;color:#94a3b8;}
+.vp-card-req-status{
+  font-size:9px;font-weight:500;padding:1px 5px;
+  border-radius:6px;white-space:nowrap;
+  background:#efefef;color:#888;
+}
+.plc-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  margin-left:6px;padding:2px 7px;border-radius:10px;
+  background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;
+  font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap;
+  transition:background .15s;vertical-align:middle;
+}
+.plc-badge:hover{background:#c8e6c9}
+.plc-badge svg{width:9px;height:9px;fill:#2e7d32;flex-shrink:0}
+
+/* ── VP sheet status group headers ── */
+.vp-group-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px 0 4px;margin-top:4px;
+}
+.vp-group-hdr:first-child{margin-top:0}
+.vp-group-label{
+  font-size:10px;font-weight:700;color:#6b7280;
+  text-transform:uppercase;letter-spacing:0.6px;
+}
+.vp-group-right{display:flex;align-items:center;gap:8px}
+.vp-group-count{
+  font-size:10px;font-weight:600;color:#9ca3af;
+  background:#f3f4f6;padding:1px 6px;border-radius:8px;
+}
+.vp-group-more{
+  font-size:10px;color:#1976d2;font-weight:500;
+  background:none;border:none;padding:0;font-family:inherit;cursor:pointer;
+}
+.vp-group-more:hover{text-decoration:underline}
+
+
 </style>
 </head>
 <body>
@@ -1534,10 +1899,14 @@ body.rotation-mode .ward-alloc-badge{display:none!important;}
         <svg class="ms-chevron" viewBox="0 0 10 7"><path d="M0 0l5 7 5-7z"/></svg>
       </div>
       <div class="ms-dropdown" id="msStatusDd">
-        <label class="ms-option selected"><input type="checkbox" value="pending" checked onchange="msStatusChanged()"> Pending</label>
-        <label class="ms-option"><input type="checkbox" value="offered" onchange="msStatusChanged()"> Offered</label>
-        <label class="ms-option"><input type="checkbox" value="rejected" onchange="msStatusChanged()"> Rejected</label>
-        <label class="ms-option"><input type="checkbox" value="published" onchange="msStatusChanged()"> Published</label>
+        <div class="ms-select-all" onclick="msStatusSelectAll(event)">Select all</div>
+        <label class="ms-option selected"><input type="checkbox" value="pending" checked onchange="msStatusChanged()"><span class="ms-status-dot ms-opt-dot-pending"></span> Pending</label>
+        <label class="ms-option"><input type="checkbox" value="offered" onchange="msStatusChanged()"><span class="ms-status-dot ms-opt-dot-offered"></span> Offered</label>
+        <label class="ms-option"><input type="checkbox" value="allocated" onchange="msStatusChanged()"><span class="ms-status-dot ms-opt-dot-allocated"></span> Allocated</label>
+        <label class="ms-option"><input type="checkbox" value="rejected" onchange="msStatusChanged()"><span class="ms-status-dot ms-opt-dot-rejected"></span> Rejected</label>
+        <label class="ms-option"><input type="checkbox" value="completed" onchange="msStatusChanged()"><span class="ms-status-dot ms-opt-dot-completed"></span> Completed</label>
+        <label class="ms-option"><input type="checkbox" value="withdrawn-ep" onchange="msStatusChanged()"><span class="ms-status-dot ms-opt-dot-withdrawn"></span> Withdrawn Education Provider</label>
+        <label class="ms-option"><input type="checkbox" value="withdrawn-student" onchange="msStatusChanged()"><span class="ms-status-dot ms-opt-dot-withdrawn"></span> Withdrawn Student</label>
       </div>
     </div>
   </div>
@@ -1568,24 +1937,9 @@ body.rotation-mode .ward-alloc-badge{display:none!important;}
   </div>
 </div>
 
-<!-- SUMMARY BAR -->
-<div class="summary-bar" id="summaryBar">
-  <div class="summary-card" onclick="setSummaryFilter('all')">
-    <span class="summary-card-val" id="sum-all">0</span>
-    <span class="summary-card-lbl">All Requests</span>
-  </div>
-  <div class="summary-card s-pending active" onclick="setSummaryFilter('pending')">
-    <span class="summary-card-val" id="sum-pending">0</span>
-    <span class="summary-card-lbl">Pending</span>
-  </div>
-  <div class="summary-card s-offered" onclick="setSummaryFilter('offered')">
-    <span class="summary-card-val" id="sum-offered">0</span>
-    <span class="summary-card-lbl">Offered</span>
-  </div>
-  <div class="summary-card s-rejected" onclick="setSummaryFilter('rejected')">
-    <span class="summary-card-val" id="sum-rejected">0</span>
-    <span class="summary-card-lbl">Rejected</span>
-  </div>
+<!-- STATUS INDICATOR (replaces summary bar) -->
+<div class="status-indicator-bar" id="statusIndicatorBar">
+  <span class="si-text" id="statusIndicatorText">Showing 0 Pending</span>
 </div>
 
 <!-- TOOLBAR -->
@@ -1651,7 +2005,19 @@ body.rotation-mode .ward-alloc-badge{display:none!important;}
   <!-- 5. Spacer pushes EP Balance to far right -->
   <div class="toolbar-spacer"></div>
 
-  <!-- 6. EP Balance — secondary, far right -->
+  <!-- 6. Compact toggle + EP Balance — far right -->
+  <div style="display:flex;align-items:center;gap:4px;margin-right:6px">
+    <span class="toolbar-section-lbl">Compact</span>
+    <div class="groupby-grp" title="Toggle compact view">
+      <button class="gb-btn active" id="densityNormal" onclick="setDensity('normal',this)" style="padding:3px 8px;font-size:11px" title="Comfortable">
+        <svg viewBox="0 0 24 24" style="width:11px;height:11px;fill:currentColor"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+      </button>
+      <button class="gb-btn" id="densityCondensed" onclick="setDensity('condensed',this)" style="padding:3px 8px;font-size:11px" title="Compact">
+        <svg viewBox="0 0 24 24" style="width:11px;height:11px;fill:currentColor"><path d="M3 15h18v-2H3v2zm0 4h18v-2H3v2zm0-8h18V9H3v2zm0-6v2h18V5H3z"/></svg>
+      </button>
+    </div>
+  </div>
+
   <button class="ep-toggle-btn" id="epToggleBtn" onclick="toggleEp('modal')">
     <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
     EP Balance
@@ -1875,6 +2241,9 @@ body.rotation-mode .ward-alloc-badge{display:none!important;}
     </div>
   </div>
 
+  <!-- Alloc grid + rotation rail + bottom tray -->
+  <div class="alloc-screen-wrap" id="allocScreenWrap">
+
   <!-- Alloc grid + optional rotation rail -->
   <div class="alloc-body-wrap" id="allocBodyWrap">
 
@@ -1905,54 +2274,7 @@ body.rotation-mode .ward-alloc-badge{display:none!important;}
     </div>
 
     <!-- Right rail — Placement (Standard allocation, hidden until first draft) -->
-    <div class="placement-rail" id="placementRail">
-
-      <!-- Header -->
-      <div class="pr-header">
-        <span class="pr-title">Placements</span>
-        <button class="pr-collapse" onclick="collapsePlacementRail()" title="Collapse">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9 18l6-6-6-6"/></svg>
-        </button>
-      </div>
-
-      <!-- Request summary counters -->
-      <div class="pr-summary" id="prSummary">
-        <div class="pr-sum-item"><span class="pr-sum-val" id="prSumRequested">—</span><span class="pr-sum-lbl">Requested</span></div>
-        <div class="pr-sum-item"><span class="pr-sum-val" id="prSumDrafted">0</span><span class="pr-sum-lbl">Drafted</span></div>
-        <div class="pr-sum-item"><span class="pr-sum-val rem" id="prSumRemaining">—</span><span class="pr-sum-lbl">Remaining</span></div>
-      </div>
-
-      <!-- Scrollable card list -->
-      <div class="pr-body" id="prBody">
-        <div class="pr-empty" id="prEmpty">
-          <svg class="pr-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-          <p class="pr-empty-title">No drafts yet</p>
-          <p class="pr-empty-sub">Allocate from the grid to<br>start building placements.</p>
-        </div>
-        <div id="prDraftSection" style="display:none">
-          <div class="pr-section-lbl">Drafts</div>
-          <div id="prDraftCards"></div>
-        </div>
-        <div id="prOfferedSection" style="display:none">
-          <div class="pr-section-lbl">Offered</div>
-          <div id="prOfferedCards"></div>
-        </div>
-        <div id="prPublishedSection" style="display:none">
-          <div class="pr-section-lbl">Published</div>
-          <div id="prPublishedCards"></div>
-        </div>
-      </div>
-
-      <!-- Sticky footer -->
-      <div class="pr-footer" id="prFooter">
-        <div class="pr-footer-summary" id="prFooterSummary"></div>
-        <div class="pr-footer-actions">
-          <button class="btn-pr-clear" onclick="clearDrafts()">Clear drafts</button>
-          <button class="btn-pr-review" id="btnPrReview" onclick="rotationMode ? showRotationReview() : openPanel()">Review &amp; Generate →</button>
-        </div>
-      </div>
-
-    </div><!-- /placement-rail -->
+    <!-- Placement rail removed — replaced by sticky bottom tray below -->
 
     <!-- Right rail — Rotation (hidden by default, multi-state) -->
     <div class="rotation-rail" id="rotationRail">
@@ -2008,7 +2330,7 @@ body.rotation-mode .ward-alloc-badge{display:none!important;}
           <div class="rr-summary-row"><span>Weeks covered</span><span id="rrWeeksCovered" class="rr-summary-val">0</span></div>
         </div>
         <div style="padding:0 14px 14px;display:flex;flex-direction:column;gap:6px">
-          <button class="rr-confirm-btn" id="rrConfirmBtn" onclick="saveRotationPlacement()" disabled>Save Rotation Placement</button>
+          <button class="rr-confirm-btn" id="rrConfirmBtn" onclick="saveAndReviewRotation()" disabled>Save &amp; Review Placement</button>
           <button onclick="resetFulfillmentMode()" style="height:30px;border:1px solid #e2e5ea;background:white;border-radius:6px;cursor:pointer;font-family:inherit;font-size:11px;color:#6b7280;">Cancel</button>
         </div>
       </div>
@@ -2054,18 +2376,123 @@ body.rotation-mode .ward-alloc-badge{display:none!important;}
 
   </div><!-- /alloc-body-wrap -->
 
-  <!-- Sticky bottom action bar -->
-  <div class="alloc-bottom-bar" id="allocBottomBar">
-    <div class="abb-inner">
-      <span class="abb-status" id="abbStatus">0 placements drafted</span>
-      <button class="btn-abb-clear" onclick="clearDrafts()">Clear all</button>
-      <button class="btn-abb-review" onclick="openPanel()">Review &amp; Generate →</button>
+  <!-- ══ BOTTOM PLACEMENT WORKSPACE ══ -->
+  <div class="placement-tray" id="placementTray">
+
+    <!-- Collapsed bar — always visible when tray is showing -->
+    <div class="pt-collapsed-bar" id="ptCollapsedBar" onclick="toggleTrayExpand()">
+      <div class="pt-cb-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </div>
+      <span class="pt-cb-title">Placement Workspace</span>
+      <div class="pt-cb-chips" id="ptCbChips">
+        <span class="pt-cb-chip empty">No drafts yet</span>
+      </div>
+      <span class="pt-cb-remaining" id="ptCbRemaining" style="display:none">—</span>
+      <button class="btn-pt-review" id="btnPtReviewBar" onclick="rotationMode ? showRotationReview() : openPanel()" disabled
+        style="height:28px;padding:0 14px;border:none;border-radius:5px;background:#2563eb;color:white;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+        Review &amp; Generate →
+      </button>
+      <button class="pt-cb-expand" onclick="event.stopPropagation();toggleTrayExpand()">
+        <svg class="pt-cb-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M18 15l-6-6-6 6"/></svg>
+        <span id="ptExpandLabel">Expand</span>
+      </button>
     </div>
+
+    <!-- Expanded panel -->
+    <div class="pt-expanded" id="ptExpanded">
+
+      <!-- Tab bar + live counters -->
+      <div class="pt-tabs" id="ptTabs">
+        <button class="pt-tab active" id="ptTabDrafts" onclick="switchTrayTab('drafts')">
+          Drafts <span class="pt-tab-count" id="ptTabDraftsCount">0</span>
+        </button>
+        <button class="pt-tab" id="ptTabRotations" onclick="switchTrayTab('rotations')" style="display:none">
+          Rotations <span class="pt-tab-count" id="ptTabRotationsCount">0</span>
+        </button>
+        <button class="pt-tab" id="ptTabOffered" onclick="switchTrayTab('offered')" style="display:none">
+          Offered <span class="pt-tab-count" id="ptTabOfferedCount">0</span>
+        </button>
+        <div class="pt-tabs-spacer"></div>
+        <div class="pt-tabs-counter">
+          <div class="pt-ctr"><span class="pt-ctr-val" id="ptCtrRequested">—</span><span class="pt-ctr-lbl">&nbsp;Req</span></div>
+          <div class="pt-ctr"><span class="pt-ctr-val" id="ptCtrDrafted">0</span><span class="pt-ctr-lbl">&nbsp;Drafted</span></div>
+          <div class="pt-ctr"><span class="pt-ctr-val rem" id="ptCtrRemaining">—</span><span class="pt-ctr-lbl">&nbsp;Remaining</span></div>
+        </div>
+      </div>
+
+      <!-- Standard list body -->
+      <div class="pt-body" id="ptBody">
+        <div id="ptEmptyState" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;color:#d1d5db;padding:24px;text-align:center;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <p style="font-size:11px;color:#9ca3af;font-weight:600;">No placements drafted yet</p>
+          <p style="font-size:10px;color:#cbd5e1;line-height:1.5;">Allocate from the grid above to start building placements.</p>
+        </div>
+        <div id="ptGroupList"></div>
+      </div>
+
+      <!-- Rotation composition mode (replaces list when composing) -->
+      <div class="pt-composition" id="ptComposition">
+        <div class="pt-comp-split">
+          <div class="pt-comp-timeline">
+            <div class="pt-comp-hdr">Rotation Composition — <span id="ptCompPlcLabel">Placement 1</span></div>
+            <div class="pt-comp-body" id="ptCompTimeline">
+              <div class="pt-comp-empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <p>Click cells in the grid above to add shifts to the rotation.</p>
+              </div>
+            </div>
+          </div>
+          <div class="pt-comp-exposure">
+            <div class="pt-comp-hdr">Potential Exposure Summary</div>
+            <div class="pt-comp-body" id="ptCompExposure">
+              <div class="pt-comp-empty" style="height:auto;padding:16px 12px;">
+                <p>Select cells to see potential exposure.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pt-expanded -->
+
+    <!-- Footer actions -->
+    <div class="pt-footer" id="ptFooter" style="display:none;">
+      <span class="pt-footer-left" id="ptFooterLeft"></span>
+      <button class="btn-pt-save-rot" id="btnPtSaveRot" onclick="saveRotationPlacement()">Save Rotation Placement</button>
+      <button class="btn-pt-clear-sel" id="btnPtClearSel" onclick="clearRotationSelection()">Clear Selection</button>
+      <button class="btn-pt-reject" id="btnPtReject" onclick="rejectRemainingFromRail()">Reject remaining</button>
+      <button class="btn-pt-clear" onclick="clearDrafts()">Clear drafts</button>
+      <button class="btn-pt-review" id="btnPtReview" onclick="rotationMode ? showRotationReview() : openPanel()" disabled>Review &amp; Generate →</button>
+    </div>
+
+  </div><!-- /placement-tray -->
+
+  </div><!-- /alloc-screen-wrap -->
+
+  <!-- Slim bottom bar — inside screen-alloc so it sits below grid -->
+  <div class="alloc-bottom-bar" id="allocBottomBar">
+    <span class="abb-status" id="abbStatus">0 placements drafted</span>
+    <button class="btn-abb-clear" onclick="clearDrafts()">Clear all</button>
+    <button class="btn-abb-review" onclick="rotationMode ? showRotationReview() : openPanel()">Review &amp; Generate →</button>
   </div>
 
 </div><!-- /screen-alloc -->
 
 </div><!-- /screens -->
+
+<!-- View Placements side sheet — outside screens to avoid overflow:hidden clipping -->
+<div class="vp-overlay" id="vpOverlay" onclick="closeVpSheet()"></div>
+<div class="vp-sheet" id="vpSheet">
+  <div class="vp-hdr">
+    <div>
+      <div class="vp-title" id="vpTitle">Placements</div>
+      <div class="vp-sub" id="vpSub"></div>
+    </div>
+    <button class="vp-close" onclick="closeVpSheet()">×</button>
+  </div>
+  <div class="vp-body" id="vpBody"></div>
+</div>
 
 <!-- modal removed — replaced by inline allocator -->
 
@@ -2276,6 +2703,7 @@ let groupBy  = 'none';
 let gridLoaded = false;
 const statusFilters = new Set(['pending']); // default: pending only (incl. partial); offered/rejected/published off
 let showPlacements = false; // placements hidden by default
+let condensedView = false;
 let showEP = false; // EP grouping hidden by default — independent toggle
 const DAYS = 28;
 const WEEKS = 28;
@@ -2358,7 +2786,21 @@ const AGENCIES = [
       {id:'pt-tcp',  label:'Nursing | Transition Care Programs | Year 1 | Bachelor of Nursing', caps:Array(28).fill(null)},
       {id:'pt-cc',   label:'Nursing | Critical Care | Year 3 | Bachelor of Nursing',      caps:Array(28).fill(null)},
     ],
-    reqs:[],
+    reqs:[
+      {id:'r86100',reqNum:'Req: 86100',status:'rejected',
+       ep:'ACU',campus:'Melbourne',epCode:'QACURR513A',
+       discipline:'Nursing',type:'General Medical',year:'Yr 3',qty:2,dur:'14 days',
+       shiftLabel:'AM only',shiftBadge:'sb-am',chipStyle:'ep',chipLabel:'AM',
+       shiftId:'s-am',ptId:'pt-gm',
+       dates:'13 May – 26 May 2026',
+       comment:'Rejected — requested dates overlap with existing confirmed placements.',cells:{}},
+      {id:'r86101',reqNum:'Req: 86101',status:'rejected',
+       ep:'Deakin',campus:'Geelong',epCode:'DKN',
+       discipline:'Nursing',type:'Perioperative',year:'Yr 3',qty:3,dur:'28 days',
+       shiftLabel:'Any shift',shiftBadge:'sb-all',chipStyle:'ep',chipLabel:'Any',
+       shiftId:'all',ptId:'pt-peri',
+       dates:'13 May – 9 Jun 2026',comment:'',cells:{}},
+    ],
     hiddenChildren:[]
   },
   { id:'sa-b', name:'(SA) Agency B', expanded:true,
@@ -2444,9 +2886,17 @@ const AGENCIES = [
          {day:'Mon', shiftId:'g03-am', chipLabel:'AM',  cells:{1:1,8:1,15:1,22:1}},
          {day:'Tue', shiftId:'g03-pm', chipLabel:'PM',  cells:{2:1,9:1,16:1,23:1}},
        ]},
+      // Rejected — Monash Acute, insufficient night shift capacity
+      {id:'r90615',reqNum:'Req: 90615',status:'rejected',
+       ep:'Monash',campus:'Clayton',epCode:'MON',
+       discipline:'Nursing',type:'Acute',year:'Yr 3',qty:4,dur:'28 days',
+       shiftLabel:'Night shift',shiftBadge:'sb-ngt',chipStyle:'ep',chipLabel:'Night',
+       shiftId:'g03-ngt',ptId:'g03-pt3',
+       dates:'13 May – 9 Jun 2026',
+       comment:'Rejected — night shift capacity fully allocated for this period.',cells:{}},
     ],
     children:[
-      { id:'surg', name:'Surgical', expanded:false,
+      { id:'surg', name:'Surgical', expanded:true,
         caps:[null,null,null,null,null,2,null,null,null,null,null,null,2,null,null,null,null,null,null,2,null,null,null,null,null,null,null,null],
         shifts:[
           {id:'surg-day',label:'Day',full:'Day (08:00 - 16:00) | Nursing',caps:Array(28).fill(null)},
@@ -2472,27 +2922,53 @@ const AGENCIES = [
     hiddenChildren:[]
   },
   { id:'at3111', name:'3.11.1 AT', expanded:true,
-    caps:Array(28).fill(null).map((_,i)=>[0,1,3,4].includes(i%7)?5:null),
+    caps:Array(28).fill(null).map((_,i)=>[0,1,3,4].includes(i%7)?8:null),
     shifts:[
-      {id:'at-aud',label:'Audiology | Not Specified',full:'Audiology | Not Specified | Yr 1',caps:Array(28).fill(null).map((_,i)=>[0,1,3,4].includes(i%7)?5:null)},
+      {id:'at-am',  label:'AM',  full:'AM (08:00-14:00) | Nursing', caps:Array(28).fill(null).map((_,i)=>[0,1,3,4].includes(i%7)?4:null)},
+      {id:'at-pm',  label:'PM',  full:'PM (14:00-20:00) | Nursing', caps:Array(28).fill(null).map((_,i)=>[0,1,3,4].includes(i%7)?4:null)},
+      {id:'at-ngt', label:'Night',full:'Night (20:00-06:00) | Nursing',caps:Array(28).fill(null).map((_,i)=>[0,1,3,4].includes(i%7)?2:null)},
     ],
     pts:[
-      {id:'at-pt1',label:'Audiology | Placement Type 1 | Year 1 | Bachelor of Audiology',caps:Array(28).fill(null).map((_,i)=>[0,1,3,4].includes(i%7)?1:null)},
+      {id:'at-pt1',label:'Nursing | General Medical | Year 2',caps:Array(28).fill(null).map((_,i)=>[0,1,3,4].includes(i%7)?4:null)},
+      {id:'at-pt2',label:'Nursing | Surgical | Year 3',      caps:Array(28).fill(null).map((_,i)=>[0,1,3,4].includes(i%7)?4:null)},
     ],
     reqs:[
       {id:'r90613',reqNum:'Req: 90613',status:'offered',ep:'ACU',campus:'Melbourne',epCode:'ACU',
-       discipline:'Nursing',type:'General Medical',year:'Yr 2',qty:1,allocated:1,dur:'14 days',shiftLabel:'PM only',shiftBadge:'sb-pm',chipLabel:'PM',
-       shiftId:'at-aud',ptId:'at-pt1',dates:'13 May – 26 May 2026',comment:'',
-       // Roster: Mon+Tue PM — cells are day indices for Mon and Tue within the date range
+       discipline:'Nursing',type:'General Medical',year:'Yr 2',qty:3,allocated:2,dur:'14 days',shiftLabel:'PM only',shiftBadge:'sb-pm',chipLabel:'PM',
+       shiftId:'at-pm',ptId:'at-pt1',dates:'13 May – 26 May 2026',comment:'',
        roster:{days:['Mon','Tue'],shift:'PM (13:00-19:00)'},
        cells:{0:1,1:1,7:1,8:1,14:1,15:1}},
+      {id:'r90614',reqNum:'Req: 90614',status:'pending',ep:'DKN',campus:'Geelong',epCode:'DKN',
+       discipline:'Nursing',type:'General Medical',year:'Yr 2',qty:2,allocated:0,dur:'7 days',shiftLabel:'AM only',shiftBadge:'sb-am',chipLabel:'AM',
+       shiftId:'at-am',ptId:'at-pt1',dates:'13 May – 22 May 2026',comment:'',
+       cells:{0:1,1:1,2:1,3:1,4:1,7:1,8:1,9:1}},
+      {id:'r90615',reqNum:'Req: 90615',status:'offered',ep:'MON',campus:'Clayton',epCode:'MON',
+       discipline:'Nursing',type:'Surgical',year:'Yr 3',qty:2,allocated:2,dur:'7 days',shiftLabel:'AM only',shiftBadge:'sb-am',chipLabel:'AM',
+       shiftId:'at-am',ptId:'at-pt2',dates:'13 May – 16 May 2026',comment:'',
+       cells:{0:1,1:1,2:1,3:1}},
+      {id:'r90616',reqNum:'Req: 90616',status:'pending',ep:'RMIT',campus:'City',epCode:'RMIT',
+       discipline:'Nursing',type:'Surgical',year:'Yr 3',qty:3,allocated:0,dur:'14 days',shiftLabel:'PM only',shiftBadge:'sb-pm',chipLabel:'PM',
+       shiftId:'at-pm',ptId:'at-pt2',dates:'19 May – 2 Jun 2026',comment:'',
+       cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1}},
+      {id:'r90617',reqNum:'Req: 90617',status:'offered',ep:'LTU',campus:'Melbourne',epCode:'LTU',
+       discipline:'Nursing',type:'Surgical',year:'Yr 3',qty:2,allocated:2,dur:'14 days',shiftLabel:'PM only',shiftBadge:'sb-pm',chipLabel:'PM',
+       shiftId:'at-pm',ptId:'at-pt2',dates:'13 May – 22 May 2026',comment:'',
+       cells:{0:1,1:1,3:1,4:1,7:1,8:1,9:1}},
+      {id:'r90618',reqNum:'Req: 90618',status:'pending',ep:'VU',campus:'Footscray',epCode:'VU',
+       discipline:'Nursing',type:'General Medical',year:'Yr 2',qty:2,allocated:0,dur:'14 days',shiftLabel:'AM only',shiftBadge:'sb-am',chipLabel:'AM',
+       shiftId:'at-am',ptId:'at-pt1',dates:'20 May – 2 Jun 2026',comment:'',
+       cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1}},
+      {id:'r90619',reqNum:'Req: 90619',status:'pending',ep:'CSU',campus:'Wagga',epCode:'CSU',
+       discipline:'Nursing',type:'General Medical',year:'Yr 2',qty:2,allocated:0,dur:'28 days',shiftLabel:'PM only',shiftBadge:'sb-pm',chipLabel:'PM',
+       shiftId:'at-pm',ptId:'at-pt1',dates:'13 May – 9 Jun 2026',comment:'',
+       cells:{0:1,1:1,7:1,8:1,14:1,15:1,21:1,22:1}},
       // Student request at agency level
       {id:'r91072',reqNum:'Req: 91072',reqType:'student',status:'pending',
        studentName:'James Okafor',studentCode:'S00304561',
        ep:'Deakin',campus:'Geelong',epCode:'DKN',
        discipline:'Nursing',type:'General Medical',year:'Yr 2',qty:1,dur:'7 days',
        shiftLabel:'AM only',shiftBadge:'sb-am',chipStyle:'student',chipLabel:'Student',
-       shiftId:'at-aud',ptId:'at-pt1',dates:'20 May – 26 May 2026',comment:'Student has disability support needs — please advise parking',
+       shiftId:'at-am',ptId:'at-pt1',dates:'20 May – 26 May 2026',comment:'Student has disability support needs — please advise parking',
        roster:{days:['Wed','Thu','Fri'],shift:'AM (08:00-14:00)'},
        cells:{7:1,8:1,9:1}},
     ],
@@ -2710,6 +3186,30 @@ const TULSA_AGENCIES = [
        discipline:'Nursing',type:'Obstetrics',year:'Junior',
        qty:2,dur:'1 day',shiftLabel:'Day shift',shiftBadge:'sb-day',chipStyle:'ep',chipLabel:'Day',
        shiftId:'sfh-ant-day',ptId:'sfh-ant-pt1',dates:'20 Aug 2026',comment:'',cells:{3:1}},
+
+      // 13. Rogers State — Adult Med-Surg, rejected (capacity unavailable)
+      {id:'r53401',reqNum:'Req: 53401',status:'rejected',
+       ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',
+       discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',
+       qty:4,dur:'28 days',shiftLabel:'Day shift',shiftBadge:'sb-day',chipStyle:'ep',chipLabel:'Day',
+       shiftId:'sfh-4wms-day',ptId:'sfh-4wms-pt1',
+       dates:'17 Aug – 11 Sep 2026',comment:'Request rejected — insufficient capacity for requested dates.',cells:{}},
+
+      // 14. Oral Roberts — Critical Care, rejected (no matching placement type)
+      {id:'r53402',reqNum:'Req: 53402',status:'rejected',
+       ep:'Oral Roberts University',campus:'Tulsa',epCode:'ORU',
+       discipline:'Nursing',type:'Critical Care',year:'Senior',
+       qty:3,dur:'14 days',shiftLabel:'Night shift',shiftBadge:'sb-ngt',chipStyle:'ep',chipLabel:'Night',
+       shiftId:'sfh-5sicu-ngt',ptId:'sfh-5sicu-pt1',
+       dates:'24 Aug – 7 Sep 2026',comment:'',cells:{}},
+
+      // 15. University of Tulsa — Paramedic, rejected (no capacity)
+      {id:'r53403',reqNum:'Req: 53403',status:'rejected',
+       ep:'University of Tulsa',campus:'Tulsa',epCode:'UTU',
+       discipline:'Nursing',type:'Paramedic',year:'4th Semester',
+       qty:2,dur:'7 days',shiftLabel:'Day shift',shiftBadge:'sb-day',chipStyle:'ep',chipLabel:'Day',
+       shiftId:'sfh-4wms-day',ptId:'sfh-4wms-pt1',
+       dates:'31 Aug – 4 Sep 2026',comment:'Rejected — placement type not supported at this facility.',cells:{}},
     ], hiddenChildren:[],
     children:[
 
@@ -2932,59 +3432,137 @@ const TULSA_AGENCIES = [
    Statuses: offered | published | accepted | confirmed | cancelled | withdrawn
    Cells: same day-index format as requests                               */
 const PLACEMENTS = [
-  // Deakin · Melbourne Burwood — linked to r85589 — placed at 03-2300
+  // Deakin · Melbourne Burwood — linked to r85589 (General Medical, All shifts, pt:g03-pt2)
   {id:'p75176',plcNum:'Plc: 75176',reqId:'r85589',status:'offered',
-   agencyName:'03-2300',
+   agencyName:'03-2300',shiftId:'all',ptId:'g03-pt2',
    student:'Zunga Siakalima',studentCode:'S00187432',
    ep:'Deakin',campus:'Melbourne Burwood',epCode:'CURR512A',
    discipline:'Nursing',type:'General Medical',year:'Yr 2',
    shift:'Full Day',dates:'13 May – 9 Jun 2026',
    cells:{0:1,1:1,7:1,8:1,14:1,15:1,21:1,22:1}},
   {id:'p75177',plcNum:'Plc: 75177',reqId:'r85589',status:'accepted',
-   agencyName:'03-2300',
+   agencyName:'03-2300',shiftId:'all',ptId:'g03-pt2',
    student:'Amara Osei',studentCode:'S00201345',
    ep:'Deakin',campus:'Melbourne Burwood',epCode:'CURR512A',
    discipline:'Nursing',type:'General Medical',year:'Yr 2',
    shift:'Full Day',dates:'13 May – 9 Jun 2026',
    cells:{0:1,1:1,7:1,8:1,14:1,15:1,21:1,22:1}},
   {id:'p75178',plcNum:'Plc: 75178',reqId:'r85589',status:'accepted',
-   agencyName:'03-2300',
+   agencyName:'03-2300',shiftId:'all',ptId:'g03-pt2',
    student:'Sarah Kim',studentCode:'S00288912',
    ep:'Deakin',campus:'Melbourne Burwood',epCode:'CURR512A',
    discipline:'Nursing',type:'General Medical',year:'Yr 2',
    shift:'Full Day',dates:'13 May – 9 Jun 2026',cells:{0:1,7:1,14:1,21:1}},
   // This one placed at a DIFFERENT agency — mismatch demo
-  {id:'p75179',plcNum:'Plc: 75179',reqId:'r85589',status:'confirmed',
-   agencyName:'(SA) Agency B',
+  {id:'p75179',plcNum:'Plc: 75179',reqId:'r85589',status:'accepted',
+   agencyName:'(SA) Agency B',shiftId:'all',ptId:'g03-pt2',
    requestedEp:'Deakin',requestedCampus:'Melbourne Burwood',
    student:'Omar Hassan',studentCode:'S00301234',
    ep:'Deakin',campus:'Melbourne Burwood',epCode:'CURR512A',
    discipline:'Nursing',type:'General Medical',year:'Yr 3',
    shift:'Full Day',dates:'13 May – 9 Jun 2026',cells:{1:1,8:1,15:1,22:1}},
 
-  // Deakin · Geelong — linked to r85593 — placed at 03-2300
+  // Deakin · Geelong — linked to r85593 (Surgical, All shifts, pt:g03-pt1)
   {id:'p75180',plcNum:'Plc: 75180',reqId:'r85593',status:'published',
-   agencyName:'03-2300',
+   agencyName:'03-2300',shiftId:'all',ptId:'g03-pt1',
    student:'James Larter',studentCode:'S00299871',
    ep:'Deakin',campus:'Geelong Waterfront',epCode:'CURR512A',
    discipline:'Nursing',type:'Surgical',year:'Yr 3',
    shift:'Full Day',dates:'13 May – 9 Jun 2026',
    cells:{0:1,1:1,2:1,7:1,8:1,9:1,14:1,15:1,16:1,21:1,22:1,23:1}},
   {id:'p75181',plcNum:'Plc: 75181',reqId:'r85593',status:'accepted',
-   agencyName:'03-2300',
+   agencyName:'03-2300',shiftId:'all',ptId:'g03-pt1',
    student:'Priya Mehta',studentCode:'S00312456',
    ep:'Deakin',campus:'Geelong Waterfront',epCode:'CURR512A',
    discipline:'Nursing',type:'Surgical',year:'Yr 3',
    shift:'Full Day',dates:'13 May – 9 Jun 2026',
    cells:{0:1,1:1,2:1,7:1,8:1,9:1,14:1,15:1,16:1,21:1,22:1,23:1}},
   {id:'p75182',plcNum:'Plc: 75182',reqId:'r85593',status:'accepted',
-   agencyName:'03-2300',
+   agencyName:'03-2300',shiftId:'all',ptId:'g03-pt1',
    student:'Lily Chen',studentCode:'S00315678',
    ep:'Deakin',campus:'Geelong Waterfront',epCode:'CURR512A',
    discipline:'Nursing',type:'Surgical',year:'Yr 3',
    shift:'Full Day',dates:'13 May – 9 Jun 2026',cells:{0:1,7:1,14:1,21:1}},
 
-  // ACU · Melbourne — linked to r90613, r88101
+  // ACU · Melbourne — linked to r88101 (General Medical, AM shift, pt:g03-pt1)
+  {id:'p75191',plcNum:'Plc: 75191',reqId:'r88101',status:'offered',
+   agencyName:'03-2300',shiftId:'g03-am',ptId:'g03-pt1',
+   student:'Fatima Al-Rashid',studentCode:'S00367890',
+   ep:'ACU',campus:'Melbourne',epCode:'ACU',
+   discipline:'Nursing',type:'General Medical',year:'Yr 3',
+   shift:'AM',dates:'13 May – 9 Jun 2026',cells:{0:1,7:1,14:1,21:1}},
+  {id:'p75192',plcNum:'Plc: 75192',reqId:'r88101',status:'accepted',
+   agencyName:'03-2300',shiftId:'g03-am',ptId:'g03-pt1',
+   student:'Tom Walsh',studentCode:'S00378901',
+   ep:'ACU',campus:'Melbourne',epCode:'ACU',
+   discipline:'Nursing',type:'General Medical',year:'Yr 3',
+   shift:'AM',dates:'13 May – 9 Jun 2026',cells:{0:1,7:1,14:1,21:1}},
+
+  // Monash · Clayton — linked to r88102 (General Medical, PM shift, pt:g03-pt2)
+  {id:'p75193',plcNum:'Plc: 75193',reqId:'r88102',status:'published',
+   agencyName:'03-2300',shiftId:'g03-pm',ptId:'g03-pt2',
+   student:'Aisha Patel',studentCode:'S00389012',
+   ep:'Monash',campus:'Clayton',epCode:'MON',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',
+   shift:'PM',dates:'13 May – 9 Jun 2026',cells:{0:1,7:1,14:1,21:1}},
+  {id:'p75194',plcNum:'Plc: 75194',reqId:'r88102',status:'accepted',
+   agencyName:'03-2300',shiftId:'g03-pm',ptId:'g03-pt2',
+   student:'David Park',studentCode:'S00390123',
+   ep:'Monash',campus:'Clayton',epCode:'MON',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',
+   shift:'PM',dates:'13 May – 9 Jun 2026',cells:{7:1,14:1,21:1}},
+
+  // Monash · Clayton — linked to r91205 (Acute, AM shift, pt:g03-pt1)
+  {id:'p75196',plcNum:'Plc: 75196',reqId:'r91205',status:'offered',
+   agencyName:'03-2300',shiftId:'g03-am',ptId:'g03-pt1',
+   student:'Chloe Nguyen',studentCode:'S00391001',
+   ep:'Monash',campus:'Clayton',epCode:'MON',
+   discipline:'Nursing',type:'Acute',year:'Yr 3',
+   shift:'AM',dates:'13 May – 9 Jun 2026',cells:{0:1,7:1,14:1,21:1}},
+  {id:'p75197',plcNum:'Plc: 75197',reqId:'r91205',status:'accepted',
+   agencyName:'03-2300',shiftId:'g03-am',ptId:'g03-pt1',
+   student:'Hassan Ali',studentCode:'S00391002',
+   ep:'Monash',campus:'Clayton',epCode:'MON',
+   discipline:'Nursing',type:'Acute',year:'Yr 3',
+   shift:'AM',dates:'13 May – 9 Jun 2026',cells:{0:1,7:1,14:1,21:1}},
+  {id:'p75198',plcNum:'Plc: 75198',reqId:'r91205',status:'offered',
+   agencyName:'03-2300',shiftId:'g03-am',ptId:'g03-pt1',
+   student:'Yuki Tanaka',studentCode:'S00391003',
+   ep:'Monash',campus:'Clayton',epCode:'MON',
+   discipline:'Nursing',type:'Acute',year:'Yr 3',
+   shift:'AM',dates:'13 May – 9 Jun 2026',cells:{7:1,14:1,21:1}},
+
+  // ACU · Ballarat — linked to r86430b (General Medical, AM shift, pt:g03-pt1)
+  {id:'p75199',plcNum:'Plc: 75199',reqId:'r86430b',status:'offered',
+   agencyName:'03-2300',shiftId:'g03-am',ptId:'g03-pt1',
+   student:'Mia Kowalski',studentCode:'S00392001',
+   ep:'ACU',campus:'Ballarat',epCode:'ACU',
+   discipline:'Nursing',type:'General Medical',year:'Yr 3',
+   shift:'AM',dates:'18 May 2026',cells:{5:1}},
+
+  // Night shift placements — linked to r86430b (Night, pt:g03-pt3)
+  {id:'p75200',plcNum:'Plc: 75200',reqId:'r85593',status:'offered',
+   agencyName:'03-2300',shiftId:'g03-ngt',ptId:'g03-pt3',
+   student:'Elena Sousa',studentCode:'S00393001',
+   ep:'Deakin',campus:'Geelong Waterfront',epCode:'CURR512A',
+   discipline:'Nursing',type:'Acute',year:'Yr 3',
+   shift:'Night',dates:'13 May – 9 Jun 2026',cells:{0:1,7:1,14:1,21:1}},
+  {id:'p75201',plcNum:'Plc: 75201',reqId:'r85589',status:'accepted',
+   agencyName:'03-2300',shiftId:'g03-ngt',ptId:'g03-pt4',
+   student:'Ryan O\'Brien',studentCode:'S00393002',
+   ep:'ACU',campus:'Melbourne',epCode:'ACU',
+   discipline:'Nursing',type:'Acute',year:'Yr 2',
+   shift:'Night',dates:'13 May – 9 Jun 2026',cells:{1:1,8:1,15:1,22:1}},
+
+  // Deakin · Geelong — withdrawn placement
+  {id:'p75183',plcNum:'Plc: 75183',reqId:'r85593',status:'withdrawn',
+   agencyName:'03-2300',shiftId:'all',ptId:'g03-pt1',
+   student:'Marcus Reid',studentCode:'S00320001',
+   ep:'Deakin',campus:'Geelong Waterfront',epCode:'CURR512A',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',
+   shift:'Full Day',dates:'13 May – 9 Jun 2026',cells:{0:1,7:1,14:1,21:1}},
+
+  // ACU · Melbourne — linked to r90613 — placed at 3.11.1 AT
   {id:'p75190',plcNum:'Plc: 75190',reqId:'r90613',status:'offered',
    agencyName:'3.11.1 AT',
    student:'Ben Nguyen',studentCode:'S00345678',
@@ -2992,39 +3570,6 @@ const PLACEMENTS = [
    discipline:'Nursing',type:'General Medical',year:'Yr 2',
    shift:'PM',dates:'13 May – 26 May 2026',
    cells:{0:1,1:1,7:1,8:1,14:1,15:1}},
-  {id:'p75191',plcNum:'Plc: 75191',reqId:'r88101',status:'offered',
-   agencyName:'03-2300',
-   student:'Fatima Al-Rashid',studentCode:'S00367890',
-   ep:'ACU',campus:'Melbourne',epCode:'ACU',
-   discipline:'Nursing',type:'General Medical',year:'Yr 3',
-   shift:'AM',dates:'13 May – 9 Jun 2026',cells:{0:1,7:1,14:1,21:1}},
-  {id:'p75192',plcNum:'Plc: 75192',reqId:'r88101',status:'accepted',
-   agencyName:'03-2300',
-   student:'Tom Walsh',studentCode:'S00378901',
-   ep:'ACU',campus:'Melbourne',epCode:'ACU',
-   discipline:'Nursing',type:'General Medical',year:'Yr 3',
-   shift:'AM',dates:'13 May – 9 Jun 2026',cells:{0:1,7:1,14:1,21:1}},
-
-  // Monash · Clayton — linked to r88102
-  {id:'p75193',plcNum:'Plc: 75193',reqId:'r88102',status:'published',
-   agencyName:'03-2300',
-   student:'Aisha Patel',studentCode:'S00389012',
-   ep:'Monash',campus:'Clayton',epCode:'MON',
-   discipline:'Nursing',type:'General Medical',year:'Yr 2',
-   shift:'PM',dates:'13 May – 9 Jun 2026',cells:{0:1,7:1,14:1,21:1}},
-  {id:'p75194',plcNum:'Plc: 75194',reqId:'r88102',status:'accepted',
-   agencyName:'03-2300',
-   student:'David Park',studentCode:'S00390123',
-   ep:'Monash',campus:'Clayton',epCode:'MON',
-   discipline:'Nursing',type:'General Medical',year:'Yr 2',
-   shift:'PM',dates:'13 May – 9 Jun 2026',cells:{7:1,14:1,21:1}},
-  // Deakin · Geelong — withdrawn placement
-  {id:'p75183',plcNum:'Plc: 75183',reqId:'r85593',status:'withdrawn',
-   agencyName:'03-2300',
-   student:'Marcus Reid',studentCode:'S00320001',
-   ep:'Deakin',campus:'Geelong Waterfront',epCode:'CURR512A',
-   discipline:'Nursing',type:'Surgical',year:'Yr 3',
-   shift:'Full Day',dates:'13 May – 9 Jun 2026',cells:{0:1,7:1,14:1,21:1}},
 
   // Mismatch demo — placed at (SA) Agency B, request was under 03-2300
   {id:'p75195',plcNum:'Plc: 75195',reqId:'r88102',status:'offered',
@@ -3037,41 +3582,784 @@ const PLACEMENTS = [
 
   // ── Tulsa region — fake placement data for EP Balance demo ───────────────
   // Langston University — mix of offered + accepted + published
-  {id:'pt53176a',plcNum:'Plc: 53176A',reqId:'r53176',status:'offered',   agencyName:'Saint Francis Hospital',ep:'Langston University',campus:'Tulsa',epCode:'LU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Day',dates:'24 Aug 2026',cells:{7:1}},
-  {id:'pt53176b',plcNum:'Plc: 53176B',reqId:'r53176',status:'offered',   agencyName:'Saint Francis Hospital',ep:'Langston University',campus:'Tulsa',epCode:'LU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Day',dates:'24 Aug 2026',cells:{7:1}},
-  {id:'pt53176c',plcNum:'Plc: 53176C',reqId:'r53176',status:'accepted',  agencyName:'Saint Francis Hospital',ep:'Langston University',campus:'Tulsa',epCode:'LU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Day',dates:'24 Aug 2026',cells:{7:1}},
-  {id:'pt53177a',plcNum:'Plc: 53177A',reqId:'r53177',status:'accepted',  agencyName:'Saint Francis Hospital',ep:'Langston University',campus:'Tulsa',epCode:'LU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Day',dates:'31 Aug 2026',cells:{14:1}},
-  {id:'pt53177b',plcNum:'Plc: 53177B',reqId:'r53177',status:'accepted',  agencyName:'Saint Francis Hospital',ep:'Langston University',campus:'Tulsa',epCode:'LU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Day',dates:'31 Aug 2026',cells:{14:1}},
-  {id:'pt53177c',plcNum:'Plc: 53177C',reqId:'r53177',status:'published', agencyName:'Saint Francis Hospital',ep:'Langston University',campus:'Tulsa',epCode:'LU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Day',dates:'31 Aug 2026',cells:{14:1}},
-  {id:'pt53184a',plcNum:'Plc: 53184A',reqId:'r53184',status:'published', agencyName:'Saint Francis Hospital',ep:'Langston University',campus:'Tulsa',epCode:'LU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Day',dates:'14 Sep 2026',cells:{28:1}},
-  {id:'pt53184b',plcNum:'Plc: 53184B',reqId:'r53184',status:'withdrawn', agencyName:'Saint Francis Hospital',ep:'Langston University',campus:'Tulsa',epCode:'LU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Day',dates:'14 Sep 2026',cells:{28:1}},
+  {id:'pt53176a',plcNum:'Plc: 53176A',reqId:'r53176',status:'offered',   agencyName:'4 West - Medical Surgical',ep:'Langston University',campus:'Tulsa',epCode:'LU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Day',dates:'24 Aug 2026',cells:{7:1}},
+  {id:'pt53176b',plcNum:'Plc: 53176B',reqId:'r53176',status:'offered',   agencyName:'4 West - Medical Surgical',ep:'Langston University',campus:'Tulsa',epCode:'LU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Day',dates:'24 Aug 2026',cells:{7:1}},
+  {id:'pt53176c',plcNum:'Plc: 53176C',reqId:'r53176',status:'accepted',  agencyName:'4 West - Medical Surgical',ep:'Langston University',campus:'Tulsa',epCode:'LU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Day',dates:'24 Aug 2026',cells:{7:1}},
+  {id:'pt53177a',plcNum:'Plc: 53177A',reqId:'r53177',status:'accepted',  agencyName:'4 West - Medical Surgical',ep:'Langston University',campus:'Tulsa',epCode:'LU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Day',dates:'31 Aug 2026',cells:{14:1}},
+  {id:'pt53177b',plcNum:'Plc: 53177B',reqId:'r53177',status:'accepted',  agencyName:'4 West - Medical Surgical',ep:'Langston University',campus:'Tulsa',epCode:'LU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Day',dates:'31 Aug 2026',cells:{14:1}},
+  {id:'pt53177c',plcNum:'Plc: 53177C',reqId:'r53177',status:'published', agencyName:'4 West - Medical Surgical',ep:'Langston University',campus:'Tulsa',epCode:'LU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Day',dates:'31 Aug 2026',cells:{14:1}},
+  {id:'pt53184a',plcNum:'Plc: 53184A',reqId:'r53184',status:'published', agencyName:'Emergency Department',ep:'Langston University',campus:'Tulsa',epCode:'LU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Day',dates:'14 Sep 2026',cells:{28:1}},
+  {id:'pt53184b',plcNum:'Plc: 53184B',reqId:'r53184',status:'withdrawn', agencyName:'Emergency Department',ep:'Langston University',campus:'Tulsa',epCode:'LU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Day',dates:'14 Sep 2026',cells:{28:1}},
 
   // Rogers State University — mostly accepted + published
-  {id:'pt53169a',plcNum:'Plc: 53169A',reqId:'r53169',status:'offered',   agencyName:'Saint Francis Hospital',ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',shift:'Full Day',dates:'24 Aug 2026',cells:{7:1}},
-  {id:'pt53169b',plcNum:'Plc: 53169B',reqId:'r53169',status:'offered',   agencyName:'Saint Francis Hospital',ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',shift:'Full Day',dates:'24 Aug 2026',cells:{7:1}},
-  {id:'pt53169c',plcNum:'Plc: 53169C',reqId:'r53169',status:'accepted',  agencyName:'Saint Francis Hospital',ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',shift:'Full Day',dates:'24 Aug 2026',cells:{7:1}},
-  {id:'pt53169d',plcNum:'Plc: 53169D',reqId:'r53169',status:'accepted',  agencyName:'Saint Francis Hospital',ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',shift:'Full Day',dates:'31 Aug 2026',cells:{14:1}},
-  {id:'pt53169e',plcNum:'Plc: 53169E',reqId:'r53169',status:'published', agencyName:'Saint Francis Hospital',ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',shift:'Full Day',dates:'07 Sep 2026',cells:{21:1}},
+  {id:'pt53169a',plcNum:'Plc: 53169A',reqId:'r53169',status:'offered',   agencyName:'4 West - Medical Surgical',ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',shift:'Full Day',dates:'24 Aug 2026',cells:{7:1}},
+  {id:'pt53169b',plcNum:'Plc: 53169B',reqId:'r53169',status:'offered',   agencyName:'4 West - Medical Surgical',ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',shift:'Full Day',dates:'24 Aug 2026',cells:{7:1}},
+  {id:'pt53169c',plcNum:'Plc: 53169C',reqId:'r53169',status:'accepted',  agencyName:'4 West - Medical Surgical',ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',shift:'Full Day',dates:'24 Aug 2026',cells:{7:1}},
+  {id:'pt53169d',plcNum:'Plc: 53169D',reqId:'r53169',status:'accepted',  agencyName:'4 West - Medical Surgical',ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',shift:'Full Day',dates:'31 Aug 2026',cells:{14:1}},
+  {id:'pt53169e',plcNum:'Plc: 53169E',reqId:'r53169',status:'published', agencyName:'4 West - Medical Surgical',ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',shift:'Full Day',dates:'07 Sep 2026',cells:{21:1}},
   {id:'pt88880a',plcNum:'Plc: 88880A',reqId:'r88880',status:'published', agencyName:'Saint Francis Hospital',ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',discipline:'Nursing',type:'Rotation',year:'Junior',shift:'All shifts',dates:'24 Aug 2026',cells:{7:1}},
   {id:'pt88880b',plcNum:'Plc: 88880B',reqId:'r88880',status:'accepted',  agencyName:'Saint Francis Hospital',ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',discipline:'Nursing',type:'Rotation',year:'Junior',shift:'All shifts',dates:'24 Aug 2026',cells:{7:1}},
 
   // Oral Roberts University — partially allocated (3 of 8)
-  {id:'pt53901a',plcNum:'Plc: 53901A',reqId:'r53901',status:'offered',   agencyName:'Saint Francis Hospital',ep:'Oral Roberts University',campus:'Tulsa',epCode:'ORU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Senior',shift:'Full Day',dates:'24 Aug 2026',cells:{7:1}},
-  {id:'pt53901b',plcNum:'Plc: 53901B',reqId:'r53901',status:'accepted',  agencyName:'Saint Francis Hospital',ep:'Oral Roberts University',campus:'Tulsa',epCode:'ORU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Senior',shift:'Full Day',dates:'31 Aug 2026',cells:{14:1}},
-  {id:'pt53901c',plcNum:'Plc: 53901C',reqId:'r53901',status:'accepted',  agencyName:'Saint Francis Hospital',ep:'Oral Roberts University',campus:'Tulsa',epCode:'ORU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Senior',shift:'Full Day',dates:'07 Sep 2026',cells:{21:1}},
-  {id:'pt53901d',plcNum:'Plc: 53901D',reqId:'r53901',status:'published', agencyName:'Saint Francis Hospital',ep:'Oral Roberts University',campus:'Tulsa',epCode:'ORU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Senior',shift:'Full Day',dates:'14 Sep 2026',cells:{28:1}},
-  {id:'pt53901e',plcNum:'Plc: 53901E',reqId:'r53901',status:'withdrawn', agencyName:'Saint Francis Hospital',ep:'Oral Roberts University',campus:'Tulsa',epCode:'ORU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Senior',shift:'Full Day',dates:'21 Sep 2026',cells:{35:1}},
+  {id:'pt53901a',plcNum:'Plc: 53901A',reqId:'r53901',status:'offered',   agencyName:'4 West - Medical Surgical',ep:'Oral Roberts University',campus:'Tulsa',epCode:'ORU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Senior',shift:'Full Day',dates:'24 Aug 2026',cells:{7:1}},
+  {id:'pt53901b',plcNum:'Plc: 53901B',reqId:'r53901',status:'accepted',  agencyName:'4 West - Medical Surgical',ep:'Oral Roberts University',campus:'Tulsa',epCode:'ORU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Senior',shift:'Full Day',dates:'31 Aug 2026',cells:{14:1}},
+  {id:'pt53901c',plcNum:'Plc: 53901C',reqId:'r53901',status:'accepted',  agencyName:'4 West - Medical Surgical',ep:'Oral Roberts University',campus:'Tulsa',epCode:'ORU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Senior',shift:'Full Day',dates:'07 Sep 2026',cells:{21:1}},
+  {id:'pt53901d',plcNum:'Plc: 53901D',reqId:'r53901',status:'published', agencyName:'4 West - Medical Surgical',ep:'Oral Roberts University',campus:'Tulsa',epCode:'ORU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Senior',shift:'Full Day',dates:'14 Sep 2026',cells:{28:1}},
+  {id:'pt53901e',plcNum:'Plc: 53901E',reqId:'r53901',status:'withdrawn', agencyName:'4 West - Medical Surgical',ep:'Oral Roberts University',campus:'Tulsa',epCode:'ORU',discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Senior',shift:'Full Day',dates:'21 Sep 2026',cells:{35:1}},
 
   // University of Tulsa — published and accepted
   {id:'pt53274a',plcNum:'Plc: 53274A',reqId:'r53274',status:'published', agencyName:'Laureate Psychiatric',ep:'University of Tulsa',campus:'Tulsa',epCode:'UTU',discipline:'Nursing',type:'Behavioral Health',year:'Senior',shift:'Day',dates:'24 Aug 2026',cells:{7:1}},
   {id:'pt53274b',plcNum:'Plc: 53274B',reqId:'r53274',status:'published', agencyName:'Laureate Psychiatric',ep:'University of Tulsa',campus:'Tulsa',epCode:'UTU',discipline:'Nursing',type:'Behavioral Health',year:'Senior',shift:'Day',dates:'31 Aug 2026',cells:{14:1}},
   {id:'pt53277a',plcNum:'Plc: 53277A',reqId:'r53277',status:'accepted',  agencyName:'Laureate Psychiatric',ep:'University of Tulsa',campus:'Tulsa',epCode:'UTU',discipline:'Nursing',type:'Behavioral Health',year:'Senior',shift:'Day',dates:'07 Sep 2026',cells:{21:1}},
   {id:'pt53280a',plcNum:'Plc: 53280A',reqId:'r53280',status:'offered',   agencyName:'Laureate Psychiatric',ep:'University of Tulsa',campus:'Tulsa',epCode:'UTU',discipline:'Nursing',type:'Behavioral Health',year:'Junior',shift:'Day',dates:'14 Sep 2026',cells:{28:1}},
+
+  // ── ROTATION PLACEMENTS — Saint Francis Hospital ────────────────────────
+  // 1. Accepted rotation — spans 3 wards
+  //    Linked to r88880 (Rogers State, pending rotation request)
+  {id:'prot88880a',plcNum:'Plc: 88880R1',reqId:'r88880',
+   agencyName:'Saint Francis Hospital',
+   isRotation:true,status:'accepted',
+   rotationAgencies:['4-West Med-Surg','Emergency','Critical Care'],
+   ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Rotation',year:'Junior',
+   shift:null,
+   dates:'24 Aug – 7 Dec 2026',cells:{}},
+
+  // 2. Published rotation — spans 2 wards
+  //    Linked to r88901 (Langston, pending rotation request)
+  {id:'prot88901a',plcNum:'Plc: 88901R1',reqId:'r88901',
+   agencyName:'Saint Francis Hospital',
+   isRotation:true,status:'published',
+   rotationAgencies:['4-West Med-Surg','Emergency'],
+   ep:'Langston University',campus:'Tulsa',epCode:'LU',
+   discipline:'Nursing',type:'Rotation',year:'Junior',
+   shift:null,
+   dates:'24 Aug – 7 Dec 2026',cells:{}},
+
+  // 3. Offered rotation — no shift yet (assigned at offering)
+  //    Linked to r88902 (Oral Roberts, pending rotation request)
+  {id:'prot88902a',plcNum:'Plc: 88902R1',reqId:'r88902',
+   agencyName:'Saint Francis Hospital',
+   isRotation:true,status:'offered',
+   rotationAgencies:['4-West Med-Surg','Critical Care','Emergency','Procedural'],
+   ep:'Oral Roberts University',campus:'Tulsa',epCode:'ORU',
+   discipline:'Nursing',type:'Rotation',year:'Senior',
+   shift:null,
+   dates:'24 Aug – 7 Dec 2026',cells:{}},
+
+  // ── Victoria · 03-2300 child agency — Surgical ward ─────────────────────
+  // Several placements at the Surgical child to test placement row on child agency
+
+  {id:'p80100',plcNum:'Plc: 80100',reqId:'r85593',status:'offered',
+   agencyName:'Surgical',
+   student:'Tom Walsh',studentCode:'S00400001',
+   ep:'Deakin',campus:'Geelong Waterfront',epCode:'CURR512A',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',
+   shift:'Full Day',dates:'13 May – 9 Jun 2026',
+   cells:{0:1,1:1,2:1,7:1,8:1,9:1,14:1,15:1,16:1,21:1,22:1,23:1}},
+  {id:'p80101',plcNum:'Plc: 80101',reqId:'r85593',status:'accepted',
+   agencyName:'Surgical',
+   student:'Nina Park',studentCode:'S00400002',
+   ep:'Deakin',campus:'Geelong Waterfront',epCode:'CURR512A',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',
+   shift:'Full Day',dates:'13 May – 9 Jun 2026',
+   cells:{0:1,1:1,2:1,7:1,8:1,9:1,14:1,15:1,16:1,21:1,22:1,23:1}},
+  {id:'p80102',plcNum:'Plc: 80102',reqId:'r85593',status:'accepted',
+   agencyName:'Surgical',
+   student:'Leo Bauer',studentCode:'S00400003',
+   ep:'Deakin',campus:'Melbourne Burwood',epCode:'CURR512A',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',
+   shift:'Full Day',dates:'13 May – 9 Jun 2026',
+   cells:{0:1,7:1,14:1,21:1}},
+  {id:'p80103',plcNum:'Plc: 80103',reqId:'r85589',status:'offered',
+   agencyName:'Surgical',
+   student:'Aisha Diallo',studentCode:'S00400004',
+   ep:'ACU',campus:'Melbourne',epCode:'ACU',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',
+   shift:'Full Day',dates:'13 May – 9 Jun 2026',
+   cells:{0:1,1:1,7:1,8:1,14:1,15:1,21:1,22:1}},
+  {id:'p80104',plcNum:'Plc: 80104',reqId:'r85589',status:'accepted',
+   agencyName:'Surgical',
+   student:'Ravi Patel',studentCode:'S00400005',
+   ep:'Monash',campus:'Clayton',epCode:'MON',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',
+   shift:'Full Day',dates:'13 May – 9 Jun 2026',
+   cells:{0:1,1:1,2:1,7:1,8:1,9:1,14:1,15:1,16:1}},
+  {id:'p80105',plcNum:'Plc: 80105',reqId:'r88101',status:'published',
+   agencyName:'Surgical',
+   student:'Chloe Armstrong',studentCode:'S00400006',
+   ep:'ACU',campus:'Melbourne',epCode:'ACU',
+   discipline:'Nursing',type:'General Medical',year:'Yr 3',
+   shift:'AM',dates:'13 May – 9 Jun 2026',
+   cells:{0:1,7:1,14:1,21:1}},
+
+  // ── Victoria · 03-2300 child agency — A2023-00016 (deep child) ──────────
+  {id:'p80200',plcNum:'Plc: 80200',reqId:'r85593',status:'accepted',
+   agencyName:'A2023-00016',
+   student:'Sophie Grant',studentCode:'S00500001',
+   ep:'Deakin',campus:'Geelong Waterfront',epCode:'CURR512A',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',
+   shift:'Full Day',dates:'13 May – 9 Jun 2026',
+   cells:{7:1,8:1,9:1,14:1,15:1,16:1}},
+  {id:'p80201',plcNum:'Plc: 80201',reqId:'r85593',status:'offered',
+   agencyName:'A2023-00016',
+   student:'Marcus Hill',studentCode:'S00500002',
+   ep:'Monash',campus:'Clayton',epCode:'MON',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',
+   shift:'Full Day',dates:'13 May – 9 Jun 2026',
+   cells:{7:1,8:1,14:1,15:1,21:1,22:1}},
+  {id:'p80202',plcNum:'Plc: 80202',reqId:'r91205',status:'accepted',
+   agencyName:'A2023-00016',
+   student:'Elena Russo',studentCode:'S00500003',
+   ep:'Monash',campus:'Clayton',epCode:'MON',
+   discipline:'Nursing',type:'Acute',year:'Yr 3',
+   shift:'AM',dates:'13 May – 9 Jun 2026',
+   cells:{0:1,7:1,14:1,21:1}},
+
+  // ── Victoria · 3.11.1 AT ────────────────────────────────────────────────
+  {id:'p80300',plcNum:'Plc: 80300',reqId:'r90613',status:'accepted',
+   agencyName:'3.11.1 AT',
+   student:'Oliver Chen',studentCode:'S00600001',
+   ep:'ACU',campus:'Melbourne',epCode:'ACU',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',
+   shift:'PM',dates:'13 May – 26 May 2026',
+   cells:{0:1,1:1,7:1,8:1}},
+  {id:'p80301',plcNum:'Plc: 80301',reqId:'r90613',status:'offered',
+   agencyName:'3.11.1 AT',
+   student:'Priya Sharma',studentCode:'S00600002',
+   ep:'Deakin',campus:'Geelong',epCode:'DKN',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',
+   shift:'PM',dates:'13 May – 26 May 2026',
+   cells:{1:1,8:1,14:1,15:1}},
+  {id:'p80302',plcNum:'Plc: 80302',reqId:'r90613',status:'published',
+   agencyName:'3.11.1 AT',
+   student:'James Wu',studentCode:'S00600003',
+   ep:'ACU',campus:'Melbourne',epCode:'ACU',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',
+   shift:'PM',dates:'13 May – 26 May 2026',
+   cells:{0:1,7:1,14:1}},
+
+  // ── Tulsa · Laureate · Adult Behavioral Health ───────────────────────────
+  {id:'p90100',plcNum:'Plc: 90100',reqId:'r88880',status:'offered',
+   agencyName:'Adult Behavioral Health',
+   student:'Kayla Rivers',studentCode:'T00100001',
+   ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Junior',
+   shift:'Day',dates:'24 Aug – 7 Dec 2026',
+   cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1}},
+  {id:'p90101',plcNum:'Plc: 90101',reqId:'r88880',status:'accepted',
+   agencyName:'Adult Behavioral Health',
+   student:'Marcus Taylor',studentCode:'T00100002',
+   ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Junior',
+   shift:'Evening',dates:'24 Aug – 7 Dec 2026',
+   cells:{7:1,8:1,9:1,14:1,15:1,16:1,21:1,22:1,23:1}},
+  {id:'p90102',plcNum:'Plc: 90102',reqId:'r88901',status:'offered',
+   agencyName:'Adult Behavioral Health',
+   student:'Destiny Moore',studentCode:'T00100003',
+   ep:'Langston University',campus:'Tulsa',epCode:'LU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Junior',
+   shift:'Day',dates:'24 Aug – 7 Dec 2026',
+   cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1}},
+  {id:'p90103',plcNum:'Plc: 90103',reqId:'r88901',status:'accepted',
+   agencyName:'Adult Behavioral Health',
+   student:'Jordan Blake',studentCode:'T00100004',
+   ep:'Oral Roberts University',campus:'Tulsa',epCode:'ORU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Senior',
+   shift:'Day',dates:'24 Aug – 7 Dec 2026',
+   cells:{7:1,8:1,14:1,15:1,21:1,22:1}},
+  {id:'p90104',plcNum:'Plc: 90104',reqId:'r88902',status:'published',
+   agencyName:'Adult Behavioral Health',
+   student:'Alexis Reed',studentCode:'T00100005',
+   ep:'University of Tulsa',campus:'Tulsa',epCode:'UTU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Senior',
+   shift:'Evening',dates:'24 Aug – 7 Dec 2026',
+   cells:{7:1,9:1,11:1,14:1,16:1,18:1,21:1,23:1}},
+
+  // ── Tulsa · Laureate · Eating Disorders ─────────────────────────────────
+  {id:'p90200',plcNum:'Plc: 90200',reqId:'r88903',status:'offered',
+   agencyName:'Eating Disorders',
+   student:'Brianna Scott',studentCode:'T00200001',
+   ep:'University of Tulsa',campus:'Tulsa',epCode:'UTU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Senior',
+   shift:'Day',dates:'24 Aug – 7 Dec 2026',
+   cells:{7:1,8:1,9:1,14:1,15:1,16:1}},
+  {id:'p90201',plcNum:'Plc: 90201',reqId:'r88901',status:'accepted',
+   agencyName:'Eating Disorders',
+   student:'Noah Martinez',studentCode:'T00200002',
+   ep:'Langston University',campus:'Tulsa',epCode:'LU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Junior',
+   shift:'Evening',dates:'24 Aug – 7 Dec 2026',
+   cells:{7:1,8:1,14:1,15:1,21:1,22:1}},
+
+  // ── Tulsa · Laureate · Senior Behavioral Health ──────────────────────────
+  {id:'p90300',plcNum:'Plc: 90300',reqId:'r88902',status:'accepted',
+   agencyName:'Senior Behavioral Health',
+   student:'Cameron Ellis',studentCode:'T00300001',
+   ep:'Oral Roberts University',campus:'Tulsa',epCode:'ORU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Senior',
+   shift:'Day',dates:'24 Aug – 7 Dec 2026',
+   cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1}},
+  {id:'p90301',plcNum:'Plc: 90301',reqId:'r88880',status:'offered',
+   agencyName:'Senior Behavioral Health',
+   student:'Taylor Kim',studentCode:'T00300002',
+   ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Junior',
+   shift:'Evening',dates:'24 Aug – 7 Dec 2026',
+   cells:{7:1,9:1,11:1,14:1,16:1,18:1,21:1,23:1,25:1}},
+  {id:'p90302',plcNum:'Plc: 90302',reqId:'r88903',status:'published',
+   agencyName:'Senior Behavioral Health',
+   student:'Devon Washington',studentCode:'T00300003',
+   ep:'University of Tulsa',campus:'Tulsa',epCode:'UTU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Senior',
+   shift:'Day',dates:'24 Aug – 7 Dec 2026',
+   cells:{8:1,10:1,15:1,17:1,22:1,24:1}},
+
+  // ── Tulsa · Laureate · Wells Progressive Care ────────────────────────────
+  {id:'p90400',plcNum:'Plc: 90400',reqId:'r88901',status:'offered',
+   agencyName:'Wells Progressive Care',
+   student:'Riley Johnson',studentCode:'T00400001',
+   ep:'Langston University',campus:'Tulsa',epCode:'LU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Junior',
+   shift:'Day',dates:'24 Aug – 7 Dec 2026',
+   cells:{7:1,8:1,9:1,14:1,15:1,16:1,21:1,22:1,23:1}},
+  {id:'p90401',plcNum:'Plc: 90401',reqId:'r88902',status:'accepted',
+   agencyName:'Wells Progressive Care',
+   student:'Avery Thompson',studentCode:'T00400002',
+   ep:'Oral Roberts University',campus:'Tulsa',epCode:'ORU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Senior',
+   shift:'Evening',dates:'24 Aug – 7 Dec 2026',
+   cells:{7:1,8:1,14:1,15:1,21:1,22:1}},
+
+  // ── Tulsa · Saint Francis · 4 West Medical Surgical ─────────────────────
+  {id:'p91000',plcNum:'Plc: 91000',reqId:'r88904',status:'offered',
+   agencyName:'4 West - Medical Surgical',
+   student:'Hunter Davis',studentCode:'T01000001',
+   ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',
+   shift:'Day',dates:'18 Aug – 10 Sep 2026',
+   cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1}},
+  {id:'p91001',plcNum:'Plc: 91001',reqId:'r88904',status:'accepted',
+   agencyName:'4 West - Medical Surgical',
+   student:'Savannah Clark',studentCode:'T01000002',
+   ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',
+   shift:'Day',dates:'18 Aug – 10 Sep 2026',
+   cells:{7:1,8:1,9:1,14:1,15:1,16:1}},
+  {id:'p91002',plcNum:'Plc: 91002',reqId:'r53901',status:'offered',
+   agencyName:'4 West - Medical Surgical',
+   student:'Isaiah White',studentCode:'T01000003',
+   ep:'Oral Roberts University',campus:'Tulsa',epCode:'ORU',
+   discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Senior',
+   shift:'Day',dates:'24 Aug – 9 Sep 2026',
+   cells:{7:1,9:1,14:1,16:1,21:1,23:1}},
+  {id:'p91003',plcNum:'Plc: 91003',reqId:'r53901',status:'accepted',
+   agencyName:'4 West - Medical Surgical',
+   student:'Aaliyah Harris',studentCode:'T01000004',
+   ep:'Langston University',campus:'Tulsa',epCode:'LU',
+   discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',
+   shift:'Day',dates:'24 Aug – 9 Sep 2026',
+   cells:{7:1,9:1,14:1,16:1}},
+  {id:'p91004',plcNum:'Plc: 91004',reqId:'r53176',status:'published',
+   agencyName:'4 West - Medical Surgical',
+   student:'Ethan Robinson',studentCode:'T01000005',
+   ep:'Langston University',campus:'Tulsa',epCode:'LU',
+   discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',
+   shift:'Day',dates:'24 Aug 2026',
+   cells:{7:1}},
+
+  // ── Tulsa · Saint Francis · Emergency Department ─────────────────────────
+  {id:'p91100',plcNum:'Plc: 91100',reqId:'r53184',status:'offered',
+   agencyName:'Emergency Department',
+   student:'Caden Lewis',studentCode:'T01100001',
+   ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Emergency',year:'Junior',
+   shift:'PM',dates:'18 Aug – 10 Sep 2026',
+   cells:{1:1,3:1,8:1,10:1,15:1,17:1}},
+  {id:'p91101',plcNum:'Plc: 91101',reqId:'r53184',status:'accepted',
+   agencyName:'Emergency Department',
+   student:'Zoe Walker',studentCode:'T01100002',
+   ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Emergency',year:'Junior',
+   shift:'PM',dates:'18 Aug – 10 Sep 2026',
+   cells:{1:1,3:1,8:1,10:1}},
+  {id:'p91102',plcNum:'Plc: 91102',reqId:'r53290',status:'offered',
+   agencyName:'Emergency Department',
+   student:'Lucas Hall',studentCode:'T01100003',
+   ep:'University of Tulsa',campus:'Tulsa',epCode:'UTU',
+   discipline:'Nursing',type:'Emergency',year:'Senior',
+   shift:'Day',dates:'17 Aug – 8 Sep 2026',
+   cells:{0:1,1:1,7:1,8:1,14:1,15:1}},
+
+  // ── Tulsa · Saint Francis · 5 Specialty CICU ────────────────────────────
+  {id:'p91200',plcNum:'Plc: 91200',reqId:'r53274',status:'offered',
+   agencyName:'5 Specialty - Cardiac Intensive Care Unit',
+   student:'Maya Young',studentCode:'T01200001',
+   ep:'University of Tulsa',campus:'Tulsa',epCode:'UTU',
+   discipline:'Nursing',type:'Critical Care',year:'4th Semester',
+   shift:'Night',dates:'2 Sep 2026',
+   cells:{16:1}},
+  {id:'p91201',plcNum:'Plc: 91201',reqId:'r53274',status:'accepted',
+   agencyName:'5 Specialty - Cardiac Intensive Care Unit',
+   student:'Liam Green',studentCode:'T01200002',
+   ep:'Rogers State University',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Critical Care',year:'4th Semester',
+   shift:'Night',dates:'2 Sep 2026',
+   cells:{16:1}},
+
+  // ── Tulsa · Saint Francis · 2 West Antepartum ───────────────────────────
+  {id:'p91300',plcNum:'Plc: 91300',reqId:'r53290',status:'accepted',
+   agencyName:'2 West - Antepartum',
+   student:'Emma Torres',studentCode:'T01300001',
+   ep:'University of Tulsa',campus:'Tulsa',epCode:'UTU',
+   discipline:'Nursing',type:'Obstetrics',year:'Senior',
+   shift:'Day',dates:'17 Aug – 8 Sep 2026',
+   cells:{0:1,1:1,7:1,8:1,14:1,15:1,21:1,22:1}},
+  {id:'p91301',plcNum:'Plc: 91301',reqId:'r53291',status:'offered',
+   agencyName:'2 West - Antepartum',
+   student:'Grace Adams',studentCode:'T01300002',
+   ep:'Oral Roberts University',campus:'Tulsa',epCode:'ORU',
+   discipline:'Nursing',type:'Obstetrics',year:'Junior',
+   shift:'Day',dates:'20 Aug 2026',
+   cells:{3:1}},
+  {id:'p91302',plcNum:'Plc: 91302',reqId:'r53192',status:'published',
+   agencyName:'2 West - Antepartum',
+   student:'Noah Carter',studentCode:'T01300003',
+   ep:'Langston University',campus:'Tulsa',epCode:'LU',
+   discipline:'Nursing',type:'Obstetrics',year:'Not Specified',
+   shift:'Day',dates:'21 Aug – 11 Sep 2026',
+   cells:{4:1,11:1,18:1,25:1}},
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 3.11.1 AT — Rich placement data covering all lane/groupBy scenarios
+  // Days: 0=Mon13, 1=Tue14, 2=Wed15, 3=Thu16, 4=Fri17, 5=Sat, 6=Sun,
+  //       7=Mon20, 8=Tue21, 9=Wed22, 10=Thu23, 11=Fri24 ...
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // ── Scenario A: Lane splitting — ACU Mon-Wed, DKN Wed-Fri (share Wed → 2 lanes)
+  {id:'at001',plcNum:'Plc: AT001',reqId:'r90613',status:'offered',
+   agencyName:'3.11.1 AT',shiftId:'at-am',ptId:'at-pt1',
+   student:'Sophie Allen',studentCode:'S00700001',
+   ep:'ACU',campus:'Melbourne',epCode:'ACU',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',shift:'AM',
+   dates:'13 May – 15 May 2026',cells:{0:1,1:1,2:1}},
+
+  {id:'at002',plcNum:'Plc: AT002',reqId:'r90613',status:'accepted',
+   agencyName:'3.11.1 AT',shiftId:'at-am',ptId:'at-pt1',
+   student:'Ben Carter',studentCode:'S00700002',
+   ep:'ACU',campus:'Melbourne',epCode:'ACU',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',shift:'AM',
+   dates:'13 May – 15 May 2026',cells:{0:1,1:1,2:1}},
+
+  {id:'at003',plcNum:'Plc: AT003',reqId:'r90613',status:'offered',
+   agencyName:'3.11.1 AT',shiftId:'at-am',ptId:'at-pt1',
+   student:'Mia Torres',studentCode:'S00700003',
+   ep:'DKN',campus:'Geelong',epCode:'DKN',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',shift:'AM',
+   dates:'15 May – 19 May 2026',cells:{2:1,3:1,4:1}},
+
+  {id:'at004',plcNum:'Plc: AT004',reqId:'r90613',status:'accepted',
+   agencyName:'3.11.1 AT',shiftId:'at-am',ptId:'at-pt1',
+   student:'Kai Nguyen',studentCode:'S00700004',
+   ep:'DKN',campus:'Geelong',epCode:'DKN',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',shift:'AM',
+   dates:'15 May – 19 May 2026',cells:{2:1,3:1,4:1}},
+
+  // ── Scenario B: 3 EPs all overlapping on Mon 13 May → 3 lanes
+  {id:'at005',plcNum:'Plc: AT005',reqId:'r90613',status:'published',
+   agencyName:'3.11.1 AT',shiftId:'at-am',ptId:'at-pt1',
+   student:'Lena Park',studentCode:'S00700005',
+   ep:'MON',campus:'Clayton',epCode:'MON',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',shift:'AM',
+   dates:'13 May – 16 May 2026',cells:{0:1,1:1,2:1,3:1}},
+
+  {id:'at006',plcNum:'Plc: AT006',reqId:'r90613',status:'offered',
+   agencyName:'3.11.1 AT',shiftId:'at-am',ptId:'at-pt1',
+   student:'Ryan Walsh',studentCode:'S00700006',
+   ep:'MON',campus:'Clayton',epCode:'MON',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',shift:'AM',
+   dates:'13 May – 16 May 2026',cells:{0:1,1:1,2:1,3:1}},
+
+  {id:'at007',plcNum:'Plc: AT007',reqId:'r90613',status:'accepted',
+   agencyName:'3.11.1 AT',shiftId:'at-am',ptId:'at-pt1',
+   student:'Nina Reid',studentCode:'S00700007',
+   ep:'CURR512A',campus:'Burwood',epCode:'CURR512A',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',shift:'AM',
+   dates:'13 May – 14 May 2026',cells:{0:1,1:1}},
+
+  // ── Scenario C: PM shift — different EPs for group-by-shift demo
+  {id:'at010',plcNum:'Plc: AT010',reqId:'r90613',status:'offered',
+   agencyName:'3.11.1 AT',shiftId:'at-pm',ptId:'at-pt2',
+   student:'James Wu',studentCode:'S00710001',
+   ep:'ACU',campus:'Ballarat',epCode:'ACU',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',shift:'PM',
+   dates:'13 May – 20 May 2026',cells:{0:1,1:1,3:1,4:1,7:1,8:1}},
+
+  {id:'at011',plcNum:'Plc: AT011',reqId:'r90613',status:'accepted',
+   agencyName:'3.11.1 AT',shiftId:'at-pm',ptId:'at-pt2',
+   student:'Grace Kim',studentCode:'S00710002',
+   ep:'ACU',campus:'Ballarat',epCode:'ACU',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',shift:'PM',
+   dates:'13 May – 20 May 2026',cells:{0:1,1:1,3:1,4:1,7:1,8:1}},
+
+  {id:'at012',plcNum:'Plc: AT012',reqId:'r90613',status:'offered',
+   agencyName:'3.11.1 AT',shiftId:'at-pm',ptId:'at-pt2',
+   student:'Omar Said',studentCode:'S00710003',
+   ep:'LTU',campus:'Melbourne',epCode:'LTU',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',shift:'PM',
+   dates:'13 May – 22 May 2026',cells:{0:1,1:1,3:1,4:1,7:1,8:1,9:1}},
+
+  {id:'at013',plcNum:'Plc: AT013',reqId:'r90613',status:'published',
+   agencyName:'3.11.1 AT',shiftId:'at-pm',ptId:'at-pt2',
+   student:'Priya Joshi',studentCode:'S00710004',
+   ep:'LTU',campus:'Melbourne',epCode:'LTU',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',shift:'PM',
+   dates:'13 May – 22 May 2026',cells:{0:1,1:1,3:1,4:1,7:1,8:1,9:1}},
+
+  {id:'at014',plcNum:'Plc: AT014',reqId:'r90613',status:'offered',
+   agencyName:'3.11.1 AT',shiftId:'at-pm',ptId:'at-pt2',
+   student:'Ethan Brooks',studentCode:'S00710005',
+   ep:'RMIT',campus:'City',epCode:'RMIT',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',shift:'PM',
+   dates:'19 May – 26 May 2026',cells:{7:1,8:1,9:1,10:1,11:1,14:1}},
+
+  {id:'at015',plcNum:'Plc: AT015',reqId:'r90613',status:'accepted',
+   agencyName:'3.11.1 AT',shiftId:'at-pm',ptId:'at-pt2',
+   student:'Chloe Evans',studentCode:'S00710006',
+   ep:'RMIT',campus:'City',epCode:'RMIT',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',shift:'PM',
+   dates:'19 May – 26 May 2026',cells:{7:1,8:1,9:1,10:1,11:1,14:1}},
+
+  {id:'at016',plcNum:'Plc: AT016',reqId:'r90613',status:'accepted',
+   agencyName:'3.11.1 AT',shiftId:'at-pm',ptId:'at-pt2',
+   student:'Lucas Tan',studentCode:'S00710007',
+   ep:'RMIT',campus:'City',epCode:'RMIT',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',shift:'PM',
+   dates:'19 May – 26 May 2026',cells:{7:1,8:1,9:1,10:1,11:1,14:1}},
+
+  // ── Scenario D: Night shift — sparse, 2 EPs with gap between them
+  {id:'at020',plcNum:'Plc: AT020',reqId:'r90613',status:'offered',
+   agencyName:'3.11.1 AT',shiftId:'at-ngt',ptId:'at-pt1',
+   student:'Yuki Sato',studentCode:'S00720001',
+   ep:'DKN',campus:'Geelong',epCode:'DKN',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',shift:'Night',
+   dates:'13 May – 14 May 2026',cells:{0:1,1:1}},
+
+  {id:'at021',plcNum:'Plc: AT021',reqId:'r90613',status:'accepted',
+   agencyName:'3.11.1 AT',shiftId:'at-ngt',ptId:'at-pt1',
+   student:'Amir Hassan',studentCode:'S00720002',
+   ep:'VU',campus:'Footscray',epCode:'VU',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',shift:'Night',
+   dates:'20 May – 22 May 2026',cells:{7:1,8:1,9:1}},
+
+  {id:'at022',plcNum:'Plc: AT022',reqId:'r90613',status:'offered',
+   agencyName:'3.11.1 AT',shiftId:'at-ngt',ptId:'at-pt2',
+   student:'Zara Hill',studentCode:'S00720003',
+   ep:'ACU',campus:'Melbourne',epCode:'ACU',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',shift:'Night',
+   dates:'21 May – 24 May 2026',cells:{8:1,9:1,10:1}},
+
+  // ── Scenario E: Dense cell — 4+ EPs all on same day (overflow demo) Week 2
+  {id:'at030',plcNum:'Plc: AT030',reqId:'r90613',status:'offered',
+   agencyName:'3.11.1 AT',shiftId:'at-am',ptId:'at-pt1',
+   student:'Felix Ng',studentCode:'S00730001',
+   ep:'UNI-MEL',campus:'Parkville',epCode:'UNI-MEL',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',shift:'AM',
+   dates:'20 May – 21 May 2026',cells:{7:1,8:1}},
+
+  {id:'at031',plcNum:'Plc: AT031',reqId:'r90613',status:'accepted',
+   agencyName:'3.11.1 AT',shiftId:'at-am',ptId:'at-pt1',
+   student:'Isla Morgan',studentCode:'S00730002',
+   ep:'SWIN',campus:'Hawthorn',epCode:'SWIN',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',shift:'AM',
+   dates:'20 May – 22 May 2026',cells:{7:1,8:1,9:1}},
+
+  {id:'at032',plcNum:'Plc: AT032',reqId:'r90613',status:'offered',
+   agencyName:'3.11.1 AT',shiftId:'at-am',ptId:'at-pt1',
+   student:'Declan Ross',studentCode:'S00730003',
+   ep:'SWIN',campus:'Hawthorn',epCode:'SWIN',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',shift:'AM',
+   dates:'20 May – 22 May 2026',cells:{7:1,8:1,9:1}},
+
+  {id:'at033',plcNum:'Plc: AT033',reqId:'r90613',status:'published',
+   agencyName:'3.11.1 AT',shiftId:'at-am',ptId:'at-pt2',
+   student:'Amber Liu',studentCode:'S00730004',
+   ep:'VU',campus:'Footscray',epCode:'VU',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',shift:'AM',
+   dates:'21 May – 26 May 2026',cells:{8:1,9:1,10:1,11:1,14:1}},
+
+  {id:'at034',plcNum:'Plc: AT034',reqId:'r90613',status:'accepted',
+   agencyName:'3.11.1 AT',shiftId:'at-am',ptId:'at-pt2',
+   student:'Marcus Bell',studentCode:'S00730005',
+   ep:'VU',campus:'Footscray',epCode:'VU',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',shift:'AM',
+   dates:'21 May – 26 May 2026',cells:{8:1,9:1,10:1,11:1,14:1}},
+
+  // ── Scenario F: Non-consecutive gaps mid-span (ACU skips Thu/Fri)
+  {id:'at040',plcNum:'Plc: AT040',reqId:'r90613',status:'offered',
+   agencyName:'3.11.1 AT',shiftId:'at-pm',ptId:'at-pt1',
+   student:'Tara Singh',studentCode:'S00740001',
+   ep:'CSU',campus:'Wagga',epCode:'CSU',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',shift:'PM',
+   dates:'13 May – 26 May 2026',cells:{0:1,1:1,7:1,8:1,14:1,15:1}},  // Mon+Tue each week
+
+  {id:'at041',plcNum:'Plc: AT041',reqId:'r90613',status:'accepted',
+   agencyName:'3.11.1 AT',shiftId:'at-pm',ptId:'at-pt1',
+   student:'Jordan Fox',studentCode:'S00740002',
+   ep:'CSU',campus:'Wagga',epCode:'CSU',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',shift:'PM',
+   dates:'13 May – 26 May 2026',cells:{0:1,1:1,7:1,8:1,14:1,15:1}},
+
+  {id:'at042',plcNum:'Plc: AT042',reqId:'r90613',status:'offered',
+   agencyName:'3.11.1 AT',shiftId:'at-pm',ptId:'at-pt1',
+   student:'Maya Cross',studentCode:'S00740003',
+   ep:'UNI-MEL',campus:'Parkville',epCode:'UNI-MEL',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',shift:'PM',
+   dates:'13 May – 24 May 2026',cells:{0:1,1:1,2:1,3:1,4:1,7:1,8:1,9:1,10:1}}, // Mon-Fri wk1 + Mon-Thu wk2
+
+  // ── Weekend-spanning: Thu16 May → Mon20 May (cols 3,4,5,6,7) ─────────────
+  {id:'at050',plcNum:'Plc: AT050',reqId:'r90613',status:'offered',
+   agencyName:'3.11.1 AT',shiftId:'at-am',ptId:'at-pt1',
+   student:'Ava Nielsen',studentCode:'S00750001',
+   ep:'CSU',campus:'Wagga',epCode:'CSU',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',shift:'AM',
+   dates:'16 May – 20 May 2026',cells:{3:1,4:1,5:1,6:1,7:1}}, // Thu→Fri→Sat→Sun→Mon
+
+  {id:'at051',plcNum:'Plc: AT051',reqId:'r90613',status:'accepted',
+   agencyName:'3.11.1 AT',shiftId:'at-am',ptId:'at-pt1',
+   student:'Jack Brennan',studentCode:'S00750002',
+   ep:'CSU',campus:'Wagga',epCode:'CSU',
+   discipline:'Nursing',type:'General Medical',year:'Yr 2',shift:'AM',
+   dates:'16 May – 20 May 2026',cells:{3:1,4:1,5:1,6:1,7:1}}, // Thu→Fri→Sat→Sun→Mon
+
+  {id:'at052',plcNum:'Plc: AT052',reqId:'r90619',status:'offered',
+   agencyName:'3.11.1 AT',shiftId:'at-pm',ptId:'at-pt2',
+   student:'Nadia Okafor',studentCode:'S00750003',
+   ep:'VU',campus:'Footscray',epCode:'VU',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',shift:'PM',
+   dates:'21 May – 25 May 2026',cells:{8:1,9:1,10:1,11:1,12:1,13:1,14:1}}, // Tue→Wed→Thu→Fri→Sat→Sun→Mon
+
+  {id:'at053',plcNum:'Plc: AT053',reqId:'r90619',status:'accepted',
+   agencyName:'3.11.1 AT',shiftId:'at-pm',ptId:'at-pt2',
+   student:'Connor Walsh',studentCode:'S00750004',
+   ep:'VU',campus:'Footscray',epCode:'VU',
+   discipline:'Nursing',type:'Surgical',year:'Yr 3',shift:'PM',
+   dates:'21 May – 25 May 2026',cells:{8:1,9:1,10:1,11:1,12:1,13:1,14:1}}, // Tue→Wed→Thu→Fri→Sat→Sun→Mon
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TULSA — Rich data for lane/groupBy scenarios
+  // Cols: 7=Mon24Aug, 8=Tue25, 9=Wed26, 10=Thu27, 11=Fri28
+  //       14=Mon31, 15=Tue01Sep, 16=Wed02, 17=Thu03, 18=Fri04
+  //       21=Mon07Sep, 22=Tue08, 23=Wed09, 24=Thu10, 25=Fri11
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // ── Adult Behavioral Health: RSU Mon-Wed, LU Wed-Fri (share Wed → 2 lanes), ORU spans all ──
+  {id:'tu001',plcNum:'Plc: TU001',reqId:'r88880',status:'offered',
+   agencyName:'Adult Behavioral Health',shiftId:'lau-abh-day',ptId:'lau-abh-pt1',
+   student:'Kayla Rivers',studentCode:'T10001',ep:'RSU',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Junior',shift:'Day',
+   dates:'24 Aug – 26 Aug 2026',cells:{7:1,8:1,9:1}},
+  {id:'tu002',plcNum:'Plc: TU002',reqId:'r88880',status:'accepted',
+   agencyName:'Adult Behavioral Health',shiftId:'lau-abh-day',ptId:'lau-abh-pt1',
+   student:'Marcus Taylor',studentCode:'T10002',ep:'RSU',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Junior',shift:'Day',
+   dates:'24 Aug – 26 Aug 2026',cells:{7:1,8:1,9:1}},
+  {id:'tu003',plcNum:'Plc: TU003',reqId:'r88901',status:'offered',
+   agencyName:'Adult Behavioral Health',shiftId:'lau-abh-day',ptId:'lau-abh-pt1',
+   student:'Destiny Moore',studentCode:'T10003',ep:'LU',campus:'Tulsa',epCode:'LU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Junior',shift:'Day',
+   dates:'26 Aug – 29 Aug 2026',cells:{9:1,10:1,11:1}},
+  {id:'tu004',plcNum:'Plc: TU004',reqId:'r88901',status:'accepted',
+   agencyName:'Adult Behavioral Health',shiftId:'lau-abh-day',ptId:'lau-abh-pt1',
+   student:'Jordan Blake',studentCode:'T10004',ep:'LU',campus:'Tulsa',epCode:'LU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Junior',shift:'Day',
+   dates:'26 Aug – 29 Aug 2026',cells:{9:1,10:1,11:1}},
+  {id:'tu005',plcNum:'Plc: TU005',reqId:'r88902',status:'published',
+   agencyName:'Adult Behavioral Health',shiftId:'lau-abh-day',ptId:'lau-abh-pt1',
+   student:'Alexis Reed',studentCode:'T10005',ep:'ORU',campus:'Tulsa',epCode:'ORU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Senior',shift:'Day',
+   dates:'24 Aug – 04 Sep 2026',cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1}},
+  {id:'tu006',plcNum:'Plc: TU006',reqId:'r88902',status:'offered',
+   agencyName:'Adult Behavioral Health',shiftId:'lau-abh-day',ptId:'lau-abh-pt1',
+   student:'Cameron Ellis',studentCode:'T10006',ep:'ORU',campus:'Tulsa',epCode:'ORU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Senior',shift:'Day',
+   dates:'24 Aug – 04 Sep 2026',cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1}},
+  // Evening shift — UTU and RSU overlap wk2
+  {id:'tu007',plcNum:'Plc: TU007',reqId:'r88903',status:'offered',
+   agencyName:'Adult Behavioral Health',shiftId:'lau-abh-eve',ptId:'lau-abh-pt1',
+   student:'Taylor Kim',studentCode:'T10007',ep:'UTU',campus:'Tulsa',epCode:'UTU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Senior',shift:'Evening',
+   dates:'31 Aug – 04 Sep 2026',cells:{14:1,15:1,16:1,17:1,18:1}},
+  {id:'tu008',plcNum:'Plc: TU008',reqId:'r88903',status:'accepted',
+   agencyName:'Adult Behavioral Health',shiftId:'lau-abh-eve',ptId:'lau-abh-pt1',
+   student:'Devon Washington',studentCode:'T10008',ep:'UTU',campus:'Tulsa',epCode:'UTU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Senior',shift:'Evening',
+   dates:'31 Aug – 04 Sep 2026',cells:{14:1,15:1,16:1,17:1,18:1}},
+  {id:'tu009',plcNum:'Plc: TU009',reqId:'r88880',status:'offered',
+   agencyName:'Adult Behavioral Health',shiftId:'lau-abh-eve',ptId:'lau-abh-pt1',
+   student:'Riley Johnson',studentCode:'T10009',ep:'RSU',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Junior',shift:'Evening',
+   dates:'31 Aug – 07 Sep 2026',cells:{14:1,15:1,16:1,17:1,18:1,21:1}},
+
+  // ── Senior Behavioral Health: ORU wk1, RSU spans wk1-2, UTU wk2-3, LU wk3 ──
+  {id:'tu020',plcNum:'Plc: TU020',reqId:'r88902',status:'offered',
+   agencyName:'Senior Behavioral Health',shiftId:'lau-sbh-day',ptId:'lau-sbh-pt1',
+   student:'Hunter Grant',studentCode:'T20001',ep:'ORU',campus:'Tulsa',epCode:'ORU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Senior',shift:'Day',
+   dates:'24 Aug – 28 Aug 2026',cells:{7:1,8:1,9:1,10:1,11:1}},
+  {id:'tu021',plcNum:'Plc: TU021',reqId:'r88902',status:'accepted',
+   agencyName:'Senior Behavioral Health',shiftId:'lau-sbh-day',ptId:'lau-sbh-pt1',
+   student:'Savannah Brooks',studentCode:'T20002',ep:'ORU',campus:'Tulsa',epCode:'ORU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Senior',shift:'Day',
+   dates:'24 Aug – 28 Aug 2026',cells:{7:1,8:1,9:1,10:1,11:1}},
+  {id:'tu022',plcNum:'Plc: TU022',reqId:'r88880',status:'offered',
+   agencyName:'Senior Behavioral Health',shiftId:'lau-sbh-day',ptId:'lau-sbh-pt1',
+   student:'Isaiah White',studentCode:'T20003',ep:'RSU',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Junior',shift:'Day',
+   dates:'24 Aug – 04 Sep 2026',cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1}},
+  {id:'tu023',plcNum:'Plc: TU023',reqId:'r88903',status:'published',
+   agencyName:'Senior Behavioral Health',shiftId:'lau-sbh-day',ptId:'lau-sbh-pt1',
+   student:'Aaliyah Harris',studentCode:'T20004',ep:'UTU',campus:'Tulsa',epCode:'UTU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Senior',shift:'Day',
+   dates:'31 Aug – 11 Sep 2026',cells:{14:1,15:1,16:1,17:1,18:1,21:1,22:1,23:1,24:1,25:1}},
+  {id:'tu024',plcNum:'Plc: TU024',reqId:'r88901',status:'offered',
+   agencyName:'Senior Behavioral Health',shiftId:'lau-sbh-day',ptId:'lau-sbh-pt1',
+   student:'Ethan Robinson',studentCode:'T20005',ep:'LU',campus:'Tulsa',epCode:'LU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Junior',shift:'Day',
+   dates:'07 Sep – 11 Sep 2026',cells:{21:1,22:1,23:1,24:1,25:1}},
+  // Evening — ORU and UTU overlap wk3
+  {id:'tu025',plcNum:'Plc: TU025',reqId:'r88902',status:'offered',
+   agencyName:'Senior Behavioral Health',shiftId:'lau-sbh-eve',ptId:'lau-sbh-pt1',
+   student:'Caden Lewis',studentCode:'T20006',ep:'ORU',campus:'Tulsa',epCode:'ORU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Senior',shift:'Evening',
+   dates:'07 Sep – 11 Sep 2026',cells:{21:1,22:1,23:1,24:1,25:1}},
+  {id:'tu026',plcNum:'Plc: TU026',reqId:'r88903',status:'accepted',
+   agencyName:'Senior Behavioral Health',shiftId:'lau-sbh-eve',ptId:'lau-sbh-pt1',
+   student:'Zoe Walker',studentCode:'T20007',ep:'UTU',campus:'Tulsa',epCode:'UTU',
+   discipline:'Nursing',type:'Behavioral Health',year:'Senior',shift:'Evening',
+   dates:'07 Sep – 11 Sep 2026',cells:{21:1,22:1,23:1,24:1,25:1}},
+
+  // ── 4 West Med-Surg: 3 shifts, RSU/ORU/LU across all ──
+  {id:'tu040',plcNum:'Plc: TU040',reqId:'r88904',status:'offered',
+   agencyName:'4 West - Medical Surgical',shiftId:'sfh-4wms-day',ptId:'sfh-4wms-pt1',
+   student:'Noah Martinez',studentCode:'T40001',ep:'RSU',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',shift:'Day',
+   dates:'24 Aug – 04 Sep 2026',cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1}},
+  {id:'tu041',plcNum:'Plc: TU041',reqId:'r88904',status:'accepted',
+   agencyName:'4 West - Medical Surgical',shiftId:'sfh-4wms-day',ptId:'sfh-4wms-pt1',
+   student:'Brianna Scott',studentCode:'T40002',ep:'RSU',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',shift:'Day',
+   dates:'24 Aug – 04 Sep 2026',cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1}},
+  {id:'tu042',plcNum:'Plc: TU042',reqId:'r88904',status:'offered',
+   agencyName:'4 West - Medical Surgical',shiftId:'sfh-4wms-day',ptId:'sfh-4wms-pt1',
+   student:'Lucas Hall',studentCode:'T40003',ep:'RSU',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',shift:'Day',
+   dates:'24 Aug – 04 Sep 2026',cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1}},
+  {id:'tu043',plcNum:'Plc: TU043',reqId:'r53901',status:'offered',
+   agencyName:'4 West - Medical Surgical',shiftId:'sfh-4wms-day',ptId:'sfh-4wms-pt1',
+   student:'Maya Young',studentCode:'T40004',ep:'ORU',campus:'Tulsa',epCode:'ORU',
+   discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Senior',shift:'Day',
+   dates:'24 Aug – 11 Sep 2026',cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1,21:1,22:1,23:1,24:1,25:1}},
+  {id:'tu044',plcNum:'Plc: TU044',reqId:'r53901',status:'accepted',
+   agencyName:'4 West - Medical Surgical',shiftId:'sfh-4wms-day',ptId:'sfh-4wms-pt1',
+   student:'Liam Green',studentCode:'T40005',ep:'ORU',campus:'Tulsa',epCode:'ORU',
+   discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Senior',shift:'Day',
+   dates:'24 Aug – 11 Sep 2026',cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1,21:1,22:1,23:1,24:1,25:1}},
+  {id:'tu045',plcNum:'Plc: TU045',reqId:'r53176',status:'offered',
+   agencyName:'4 West - Medical Surgical',shiftId:'sfh-4wms-day',ptId:'sfh-4wms-pt1',
+   student:'Emma Torres',studentCode:'T40006',ep:'LU',campus:'Tulsa',epCode:'LU',
+   discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Day',
+   dates:'07 Sep – 11 Sep 2026',cells:{21:1,22:1,23:1,24:1,25:1}},
+  // Evening
+  {id:'tu046',plcNum:'Plc: TU046',reqId:'r88904',status:'offered',
+   agencyName:'4 West - Medical Surgical',shiftId:'sfh-4wms-eve',ptId:'sfh-4wms-pt1',
+   student:'Grace Adams',studentCode:'T40007',ep:'RSU',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',shift:'Evening',
+   dates:'31 Aug – 11 Sep 2026',cells:{14:1,15:1,16:1,17:1,18:1,21:1,22:1,23:1,24:1,25:1}},
+  {id:'tu047',plcNum:'Plc: TU047',reqId:'r53901',status:'accepted',
+   agencyName:'4 West - Medical Surgical',shiftId:'sfh-4wms-eve',ptId:'sfh-4wms-pt1',
+   student:'Noah Carter',studentCode:'T40008',ep:'ORU',campus:'Tulsa',epCode:'ORU',
+   discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Senior',shift:'Evening',
+   dates:'24 Aug – 04 Sep 2026',cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1}},
+  {id:'tu048',plcNum:'Plc: TU048',reqId:'r53176',status:'published',
+   agencyName:'4 West - Medical Surgical',shiftId:'sfh-4wms-eve',ptId:'sfh-4wms-pt1',
+   student:'Avery Thompson',studentCode:'T40009',ep:'LU',campus:'Tulsa',epCode:'LU',
+   discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Not Specified',shift:'Evening',
+   dates:'31 Aug – 11 Sep 2026',cells:{14:1,15:1,16:1,17:1,18:1,21:1,22:1,23:1,24:1,25:1}},
+  // Night
+  {id:'tu049',plcNum:'Plc: TU049',reqId:'r88904',status:'offered',
+   agencyName:'4 West - Medical Surgical',shiftId:'sfh-4wms-ngt',ptId:'sfh-4wms-pt1',
+   student:'Hunter Davis',studentCode:'T40010',ep:'RSU',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Junior',shift:'Night',
+   dates:'24 Aug – 28 Aug 2026',cells:{7:1,8:1,9:1,10:1,11:1}},
+  {id:'tu050',plcNum:'Plc: TU050',reqId:'r53901',status:'offered',
+   agencyName:'4 West - Medical Surgical',shiftId:'sfh-4wms-ngt',ptId:'sfh-4wms-pt1',
+   student:'Savannah Clark',studentCode:'T40011',ep:'ORU',campus:'Tulsa',epCode:'ORU',
+   discipline:'Nursing',type:'Adult Med-Surg/Intermediate',year:'Senior',shift:'Night',
+   dates:'24 Aug – 04 Sep 2026',cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1}},
+
+  // ── Emergency Dept: RSU/UTU overlap wk1, UTU extends wk2-3, ORU wk2+ ──
+  {id:'tu060',plcNum:'Plc: TU060',reqId:'r53184',status:'offered',
+   agencyName:'Emergency Department',shiftId:'sfh-ed-day',ptId:'sfh-ed-pt1',
+   student:'Caden Rivers',studentCode:'T60001',ep:'RSU',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Emergency',year:'Junior',shift:'Day',
+   dates:'24 Aug – 28 Aug 2026',cells:{7:1,8:1,9:1,10:1,11:1}},
+  {id:'tu061',plcNum:'Plc: TU061',reqId:'r53184',status:'accepted',
+   agencyName:'Emergency Department',shiftId:'sfh-ed-day',ptId:'sfh-ed-pt1',
+   student:'Zoe Walker',studentCode:'T60002',ep:'RSU',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Emergency',year:'Junior',shift:'Day',
+   dates:'24 Aug – 28 Aug 2026',cells:{7:1,8:1,9:1,10:1,11:1}},
+  {id:'tu062',plcNum:'Plc: TU062',reqId:'r53290',status:'offered',
+   agencyName:'Emergency Department',shiftId:'sfh-ed-day',ptId:'sfh-ed-pt1',
+   student:'Lucas Hall',studentCode:'T60003',ep:'UTU',campus:'Tulsa',epCode:'UTU',
+   discipline:'Nursing',type:'Emergency',year:'Senior',shift:'Day',
+   dates:'24 Aug – 11 Sep 2026',cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1,21:1,22:1,23:1,24:1,25:1}},
+  {id:'tu063',plcNum:'Plc: TU063',reqId:'r53290',status:'accepted',
+   agencyName:'Emergency Department',shiftId:'sfh-ed-day',ptId:'sfh-ed-pt1',
+   student:'Maya Young',studentCode:'T60004',ep:'UTU',campus:'Tulsa',epCode:'UTU',
+   discipline:'Nursing',type:'Emergency',year:'Senior',shift:'Day',
+   dates:'24 Aug – 11 Sep 2026',cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1,21:1,22:1,23:1,24:1,25:1}},
+  {id:'tu064',plcNum:'Plc: TU064',reqId:'r53291',status:'offered',
+   agencyName:'Emergency Department',shiftId:'sfh-ed-day',ptId:'sfh-ed-pt1',
+   student:'Liam Green',studentCode:'T60005',ep:'ORU',campus:'Tulsa',epCode:'ORU',
+   discipline:'Nursing',type:'Emergency',year:'Junior',shift:'Day',
+   dates:'31 Aug – 11 Sep 2026',cells:{14:1,15:1,16:1,17:1,18:1,21:1,22:1,23:1,24:1,25:1}},
+
+  // ── 5 Specialty CICU: UTU+RSU day, ORU+UTU night, sparse lanes ──
+  {id:'tu070',plcNum:'Plc: TU070',reqId:'r53274',status:'offered',
+   agencyName:'5 Specialty - Cardiac Intensive Care Unit',shiftId:'sfh-5sicu-day',ptId:'sfh-5sicu-pt1',
+   student:'Emma Torres',studentCode:'T70001',ep:'UTU',campus:'Tulsa',epCode:'UTU',
+   discipline:'Nursing',type:'Critical Care',year:'4th Semester',shift:'Day',
+   dates:'24 Aug – 04 Sep 2026',cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1}},
+  {id:'tu071',plcNum:'Plc: TU071',reqId:'r53274',status:'accepted',
+   agencyName:'5 Specialty - Cardiac Intensive Care Unit',shiftId:'sfh-5sicu-day',ptId:'sfh-5sicu-pt1',
+   student:'Grace Adams',studentCode:'T70002',ep:'RSU',campus:'Tulsa',epCode:'RSU',
+   discipline:'Nursing',type:'Critical Care',year:'4th Semester',shift:'Day',
+   dates:'24 Aug – 04 Sep 2026',cells:{7:1,8:1,9:1,10:1,11:1,14:1,15:1,16:1,17:1,18:1}},
+  {id:'tu072',plcNum:'Plc: TU072',reqId:'r53274',status:'offered',
+   agencyName:'5 Specialty - Cardiac Intensive Care Unit',shiftId:'sfh-5sicu-ngt',ptId:'sfh-5sicu-pt1',
+   student:'Noah Carter',studentCode:'T70003',ep:'ORU',campus:'Tulsa',epCode:'ORU',
+   discipline:'Nursing',type:'Critical Care',year:'4th Semester',shift:'Night',
+   dates:'31 Aug – 11 Sep 2026',cells:{14:1,15:1,16:1,17:1,18:1,21:1,22:1,23:1,24:1,25:1}},
+  {id:'tu073',plcNum:'Plc: TU073',reqId:'r53274',status:'published',
+   agencyName:'5 Specialty - Cardiac Intensive Care Unit',shiftId:'sfh-5sicu-ngt',ptId:'sfh-5sicu-pt1',
+   student:'Avery Thompson',studentCode:'T70004',ep:'UTU',campus:'Tulsa',epCode:'UTU',
+   discipline:'Nursing',type:'Critical Care',year:'4th Semester',shift:'Night',
+   dates:'07 Sep – 11 Sep 2026',cells:{21:1,22:1,23:1,24:1,25:1}},
 ];
 const PLACEMENTS_BY_REQ = {};
 PLACEMENTS.forEach(p=>{
   if(!PLACEMENTS_BY_REQ[p.reqId]) PLACEMENTS_BY_REQ[p.reqId]=[];
   PLACEMENTS_BY_REQ[p.reqId].push(p);
+});
+
+// Index placements by agencyName for the placement side sheet
+const PLACEMENTS_BY_AGENCY = {};
+PLACEMENTS.forEach(p=>{
+  const key = p.agencyName;
+  if(!key) return;
+  if(!PLACEMENTS_BY_AGENCY[key]) PLACEMENTS_BY_AGENCY[key]=[];
+  PLACEMENTS_BY_AGENCY[key].push(p);
 });
 
 /* Flatten req meta */
@@ -3090,63 +4378,70 @@ TULSA_REQS.forEach(r=>{REQ_META[r.id]=r;});
 
 // EP Balance data computed from REQUESTS (slot counts) + PLACEMENTS (record counts)
 // Keyed by EP name only — campus differences don't create separate rows
+//
+// Metric definitions (all counted by placement slots / qty, not request count):
+//   Pending   = qty on pending requests minus placements already created against them
+//   Rejected  = qty on rejected requests + "reject remaining" partial rejections
+//   Planned   = placements in Planned status
+//   Offered   = placements in Offered, Accepted, or Published status (rolled up)
+//   Cancelled = placements in Cancelled status (includes offer-declined by EP)
 function computeEpData(){
   const map = {};
   const addEp = (ep) => {
     if(!map[ep]) map[ep] = {
       ep,
-      // Request slot counts (qty-based)
-      req_pending:0, req_allocated:0, req_rejected:0,
-      // Placement record counts
-      plc_offered:0, plc_accepted:0, plc_published:0, plc_cancelled:0
+      // Placement slot counts (for bar)
+      pending:0, rejected:0, planned:0, offered:0, cancelled:0,
+      // Request counts (for sub-text)
+      req_pending:0, req_offered:0, req_rejected:0
     };
     return map[ep];
   };
 
-  // ── Requests — count by slot qty ──────────────────────────────────────────
+  // ── Requests — used only for Pending (unactioned slots) and Rejected (wholly rejected, no placements) ──
   const isTulsaEp = document.getElementById('fRegion').value === 'tulsa';
   const activeRegionReqsEp = isTulsaEp ? TULSA_REQS : VICTORIA_REQS;
   const allReqs = [...activeRegionReqsEp, ...getAllReqs()];
   allReqs.forEach(r => {
-    if(!r.ep || r.reqType==='student') return;
+    if(!r.ep) return;
     const e = addEp(r.ep);
     const qty = r.qty || 0;
     const alloc = r.allocated || 0;
     if(r.status === 'pending'){
-      const open = Math.max(qty - alloc, 0);
-      e.req_allocated += alloc;
-      e.req_pending   += open;
-    } else if(r.status === 'allocated'){
-      e.req_allocated += qty;
-    } else if(r.status === 'rejected'){
-      e.req_rejected += qty;
-    } else if(r.status === 'offered'){
-      // Request-level offered (no placement records yet) — count toward bar
-      e.plc_offered += qty;
-    } else if(r.status === 'accepted'){
-      e.plc_accepted += qty;
-    } else if(r.status === 'published'){
-      e.plc_published += qty;
+      // Pending = requested slots minus any placements already created
+      e.pending += Math.max(qty - alloc, 0);
+      e.req_pending++;
+    } else if(r.status === 'rejected' && alloc === 0){
+      // Whole request rejected with no placements created — use request.qty
+      e.rejected += qty;
+      e.req_rejected++;
+    } else if(['offered','accepted','published','confirmed'].includes(r.status)){
+      e.req_offered++;
     }
   });
 
-  // ── Placements — count by record, filtered to active region ────────────────
-  // Build a set of reqIds that belong to the current region
+  // ── Placements — primary source for all buckets ────────────────────────────
   const activeReqIds = new Set(allReqs.map(r => r.id));
   PLACEMENTS.forEach(p => {
     if(!p.ep) return;
-    // Only include placements whose request belongs to the active region
     if(!activeReqIds.has(p.reqId)) return;
     const e = addEp(p.ep);
-    if(p.status === 'offered')    e.plc_offered++;
-    else if(p.status === 'accepted')  e.plc_accepted++;
-    else if(p.status === 'published') e.plc_published++;
-    else if(p.status === 'cancelled') e.plc_cancelled++;
-    else if(p.status === 'withdrawn') e.plc_cancelled++; // treat withdrawn as cancelled
+    if(['cancelled','withdrawn'].includes(p.status)){
+      // Cancelled covers agency cancellations and EP offer-declined (both → cancelled)
+      e.cancelled++;
+    } else if(p.status === 'planned'){
+      e.planned++;
+    } else if(p.status === 'rejected'){
+      // Placement-level rejected = "reject remaining" partial rejections
+      e.rejected++;
+    } else {
+      // Offered = all placements minus cancelled & planned (incl. offered, accepted, published, confirmed, etc.)
+      e.offered++;
+    }
   });
 
   // Sort by most pending first
-  return Object.values(map).sort((a,b) => b.req_pending - a.req_pending);
+  return Object.values(map).sort((a,b) => b.pending - a.pending);
 }
 
 function getAllReqs(){
@@ -3164,14 +4459,12 @@ function drawEpPanel(){
   const body = document.getElementById('epBody');
   if(!data.length){ body.innerHTML='<div class="ep-empty">No EP data for current filters</div>'; return; }
 
-  // Shared scale: find the max placement total across all EPs
-  // Round up to a "nice" number (next multiple of 5) so ticks land on round values
+  // Shared scale: max across all 5 metrics summed per EP
   const maxRaw = Math.max(...data.map(ep =>
-    ep.plc_offered + ep.plc_accepted + ep.plc_published + ep.plc_cancelled
+    ep.pending + ep.rejected + ep.planned + ep.offered + ep.cancelled
   ), 1);
-  const scaleMax = Math.ceil(maxRaw / 5) * 5; // e.g. 8 → 10, 13 → 15
+  const scaleMax = Math.ceil(maxRaw / 5) * 5;
 
-  // Build 5 evenly-spaced tick marks: 0, 25%, 50%, 75%, 100%
   const tickPcts = [0, 25, 50, 75, 100];
   const scaleTicks = tickPcts.map(pct => {
     const val = Math.round((pct / 100) * scaleMax);
@@ -3181,42 +4474,50 @@ function drawEpPanel(){
   let html = `<div class="ep-grid-hdr">
     <div class="ep-col-ep">EP</div>
     <div class="ep-col-bar">Placements</div>
-    <div class="ep-col-total" style="white-space:nowrap">Plc</div>
+    <div class="ep-col-total" style="white-space:nowrap">Total</div>
   </div>`;
 
   data.forEach(ep => {
-    // Request text summary
+    // Sub-text shows request counts — hide zero values
     const reqParts = [];
-    if(ep.req_pending)   reqParts.push(`${ep.req_pending} pending`);
-    if(ep.req_allocated) reqParts.push(`${ep.req_allocated} allocated`);
-    if(ep.req_rejected)  reqParts.push(`${ep.req_rejected} rejected`);
-    const reqMeta = reqParts.length ? reqParts.join(' · ') : 'no requests';
+    if(ep.req_pending)  reqParts.push(`${ep.req_pending} pending`);
+    if(ep.req_offered)  reqParts.push(`${ep.req_offered} offered`);
+    if(ep.req_rejected) reqParts.push(`${ep.req_rejected} rejected`);
+    const metaText = reqParts.length ? 'Requests: ' + reqParts.join(' · ') : '';
 
-    // Placement bar — all EPs share the same scale (scaleMax)
-    const plcTotal = ep.plc_offered + ep.plc_accepted + ep.plc_published + ep.plc_cancelled;
-    const offW  = Math.round((ep.plc_offered   / scaleMax) * 100);
-    const accW  = Math.round((ep.plc_accepted  / scaleMax) * 100);
-    const pubW  = Math.round((ep.plc_published / scaleMax) * 100);
-    const witW  = Math.round((ep.plc_cancelled / scaleMax) * 100);
+    const total = ep.pending + ep.rejected + ep.planned + ep.offered + ep.cancelled;
+
+    // Bar segment widths (% of scaleMax) — order: Pending | Planned | Offered | Rejected | Cancelled
+    const pW  = Math.round((ep.pending   / scaleMax) * 100);
+    const plW = Math.round((ep.planned   / scaleMax) * 100);
+    const oW  = Math.round((ep.offered   / scaleMax) * 100);
+    const rW  = Math.round((ep.rejected  / scaleMax) * 100);
+    const cW  = Math.round((ep.cancelled / scaleMax) * 100);
+
+    // Left offsets
+    const plL = pW;
+    const oL  = pW + plW;
+    const rL  = pW + plW + oW;
+    const cL  = pW + plW + oW + rW;
 
     html += `<div class="ep-grid-row">
       <div class="ep-col-ep">
         <div class="ep-row-name">${ep.ep}</div>
-        <div class="ep-row-meta">${reqMeta}</div>
+        ${metaText ? `<div class="ep-row-meta">${metaText}</div>` : ''}
       </div>
       <div class="ep-col-bar">
         <div class="ep-bar-wrap">
-          <div class="ep-bar-track"></div>
           <div class="ep-bar-guideline-75"></div>
-          <div class="ep-bar-seg" style="width:${offW}%;background:rgba(255,165,0,0.3);left:0" title="${ep.plc_offered} offered"></div>
-          <div class="ep-bar-seg" style="width:${accW}%;background:rgba(0,128,0,0.3);left:${offW}%" title="${ep.plc_accepted} accepted"></div>
-          <div class="ep-bar-seg" style="width:${pubW}%;background:rgba(0,0,255,0.3);left:${offW+accW}%" title="${ep.plc_published} published"></div>
-          <div class="ep-bar-seg" style="width:${witW}%;background:rgba(128,128,128,0.3);left:${offW+accW+pubW}%" title="${ep.plc_cancelled} cancelled"></div>
+          <div class="ep-bar-seg" style="width:${pW}%;background:rgba(198,40,40,0.25);left:0" title="${ep.pending} pending"></div>
+          <div class="ep-bar-seg" style="width:${plW}%;background:rgba(33,150,243,0.3);left:${plL}%" title="${ep.planned} planned"></div>
+          <div class="ep-bar-seg" style="width:${oW}%;background:rgba(255,152,0,0.35);left:${oL}%" title="${ep.offered} offered (all placements excl. cancelled &amp; planned)"></div>
+          <div class="ep-bar-seg" style="width:${rW}%;background:rgba(80,80,80,0.25);left:${rL}%" title="${ep.rejected} rejected"></div>
+          <div class="ep-bar-seg" style="width:${cW}%;background:rgba(158,158,158,0.25);left:${cL}%" title="${ep.cancelled} cancelled"></div>
         </div>
       </div>
       <div class="ep-col-total">
-        <span class="ep-total-num">${plcTotal}</span>
-        <span class="ep-total-lbl">plc</span>
+        <span class="ep-total-num">${total}</span>
+        <span class="ep-total-lbl">Plcs</span>
       </div>
     </div>`;
   });
@@ -3373,6 +4674,150 @@ function agencyHasAnyReqs(ag){
   return (ag.children||[]).some(c=>agencyHasAnyReqs(c));
 }
 
+/* ── PLACEMENT ROW ─────────────────────────────────────────────────────────
+   Renders one "Placements" row directly under an agency (or shift sub-row).
+   `plcs`  — array of PLACEMENTS objects scoped to this agency/shift
+   `depth` — indentation level (matches the parent row)
+   `agencyName` — passed through to openVpSheetForAgency
+   `epFilter` — if set (EP groupBy context), cells show that EP's placements only;
+                View still opens ALL placements for the agency                */
+function renderPlacementRow(plcs, depth, agencyName, epFilter){
+  if(!plcs || !plcs.length) return '';
+
+  const active = plcs.filter(p=>!['cancelled','withdrawn'].includes(p.status));
+  if(!active.length) return '';
+
+  const allAgPlcs = (PLACEMENTS_BY_AGENCY[agencyName]||[])
+    .filter(p=>!['cancelled','withdrawn'].includes(p.status));
+  const viewTotal = allAgPlcs.length || active.length;
+
+  const cols = viewMode==='week' ? WEEKS : DAYS;
+  const pad  = 8 + (depth+1)*20;
+  const safeAgName = agencyName.replace(/"/g,'&quot;');
+  const isWkndCol = i => viewMode !== 'week' && isWknd(getDate(i));
+
+  // ── Build per-EP day-count arrays ─────────────────────────────────────────
+  const epMap = {};
+  active.forEach(p => {
+    const code = p.epCode || p.ep || '—';
+    if(!epMap[code]) epMap[code] = Array(cols).fill(0);
+    for(let i = 0; i < cols; i++){
+      if(p.cells && p.cells[i]) epMap[code][i] += 1;
+    }
+  });
+
+  // ── epFilter mode: inside EP group row — single row, count-only ───────────
+  if(epFilter){
+    const counts = epMap[epFilter] || Array(cols).fill(0);
+    let h = `<tr class="tr-plc-row">`;
+    h += `<td class="td-plc-row-name"><div class="plc-row-inner" style="padding-left:${pad}px">`;
+    h += `<span class="plc-row-lbl">Placements</span>`;
+    h += `<button class="plc-row-view" onclick="openVpSheetForAgency('${safeAgName}',${viewTotal})">View</button>`;
+    h += `</div></td>`;
+    let i = 0;
+    while(i < cols){
+      const wknd = isWkndCol(i);
+      if(!counts[i]){ h += `<td class="td-plc-row-cell${wknd?' wknd':''}"></td>`; i++; continue; }
+      let span = 1, total = counts[i];
+      while(i+span < cols && counts[i+span]){
+        total += counts[i+span]; span++;
+      }
+      const safeEp = epFilter.replace(/'/g,"\\'");
+      const wkndCls = wknd ? ' wknd' : '';
+      h += `<td class="td-plc-row-cell plc-ep-has-data${wkndCls}"${span>1?` colspan="${span}"`:''}>`
+         + `<span class="plc-ep-chip plc-ep-span plc-ep-clickable" onclick="openVpSheetForAgency('${safeAgName}',${total},'${safeEp}')">×${total}</span></td>`;
+      i += span;
+    }
+    return h + '</tr>';
+  }
+
+  // ── Sort EPs alphabetically ───────────────────────────────────────────────
+  const epCodes = Object.keys(epMap).sort();
+
+  // ── Build segments per EP: {ep, start, end, span, total} ─────────────────
+  // Segments span consecutive days WITH placements — weekends bridged if
+  // placements exist on both sides (Thu→Mon nursing pattern)
+  const segments = [];
+  epCodes.forEach(ep => {
+    const counts = epMap[ep];
+    let i = 0;
+    while(i < cols){
+      if(!counts[i]){ i++; continue; }
+      let span = 1, total = counts[i];
+      // Extend: skip weekend cols (they may be zero) if next non-weekend has placements
+      while(i+span < cols){
+        if(counts[i+span]){
+          // next day has placements — always extend
+          total += counts[i+span]; span++;
+        } else if(isWkndCol(i+span)){
+          // weekend gap — look ahead to see if placements resume after weekend
+          let skip = 1;
+          while(i+span+skip < cols && isWkndCol(i+span+skip)) skip++;
+          if(i+span+skip < cols && counts[i+span+skip]){
+            // placements resume after weekend — bridge over it
+            span += skip; // include the weekend cols in the span (zero count, just visual)
+          } else {
+            break; // nothing after weekend — stop
+          }
+        } else {
+          break; // weekday with no placements — stop
+        }
+      }
+      segments.push({ ep, start: i, end: i+span-1, span, total });
+      i += span;
+    }
+  });
+
+  // ── Assign segments to lanes (greedy, any shared day = new lane) ──────────
+  const lanes = [];
+  segments.forEach(seg => {
+    let placed = false;
+    for(const lane of lanes){
+      const clash = lane.some(s => seg.start <= s.end && seg.end >= s.start);
+      if(!clash){ lane.push(seg); placed = true; break; }
+    }
+    if(!placed) lanes.push([seg]);
+  });
+
+  if(!lanes.length) return '';
+
+  // ── Render lanes ─────────────────────────────────────────────────────────
+  let h = '';
+  lanes.forEach((lane, laneIdx) => {
+    h += `<tr class="tr-plc-row">`;
+
+    if(laneIdx === 0){
+      const laneLabel = lanes.length > 1 ? '' : '';
+      h += `<td class="td-plc-row-name" rowspan="${lanes.length}">`;
+      h += `<div class="plc-row-inner" style="padding-left:${pad}px">`;
+      h += `<span class="plc-row-lbl">Placements</span>`;
+      h += `<button class="plc-row-view" onclick="openVpSheetForAgency('${safeAgName}',${viewTotal})">View</button>`;
+      h += `</div></td>`;
+    }
+
+    lane.sort((a,b) => a.start - b.start);
+
+    let i = 0, segIdx = 0;
+    while(i < cols){
+      if(segIdx < lane.length && lane[segIdx].start === i){
+        const seg = lane[segIdx++];
+        const safeEp = seg.ep.replace(/'/g,"\\'");
+        const lbl = `${seg.total}\u00d7 ${seg.ep}`;
+        h += `<td class="td-plc-row-cell plc-ep-has-data"${seg.span>1?` colspan="${seg.span}"`:''}>`
+           + `<span class="plc-ep-chip plc-ep-span plc-ep-clickable" onclick="openVpSheetForAgency('${safeAgName}',${seg.total},'${safeEp}')">${lbl}</span>`
+           + `</td>`;
+        i += seg.span;
+      } else {
+        h += isWkndCol(i) ? `<td class="td-plc-row-cell wknd"></td>` : `<td class="td-plc-row-cell"></td>`;
+        i++;
+      }
+    }
+    h += `</tr>`;
+  });
+
+  return h;
+}
+
 function renderAgencies(ags,cols,depth){
   let rows='';
   ags.forEach(ag=>{
@@ -3381,6 +4826,14 @@ function renderAgencies(ags,cols,depth){
       const reqs=(ag.reqs||[]).filter(r=>statusFilters.has(r.status));
       const shifts=ag.shifts||[];
       const pts=ag.pts||[];
+
+      // ── Placement row (groupBy=none only — shift/pt modes inject per sub-row) ──
+      // Only on leaf agencies (no children) — parent agencies show placements on their children
+      const isLeaf = !ag.children || ag.children.length === 0;
+      if(showPlacements && groupBy==='none' && isLeaf){
+        const agPlcs = PLACEMENTS_BY_AGENCY[ag.name]||[];
+        rows += renderPlacementRow(agPlcs, depth, ag.name);
+      }
 
       if(groupBy==='none'){
         // ── GROUP BY NONE (DEFAULT) ───────────────────────────────────────────
@@ -3476,7 +4929,7 @@ function getAgCap(ag, i){
 }
 
 function renderFacRow(ag,cols,depth){
-  const pad=8+depth*16;
+  const pad=8+depth*20;
   const hasKids=(ag.shifts&&ag.shifts.length)||(ag.reqs&&ag.reqs.length)||(ag.children&&ag.children.length)||(ag.hiddenChildren&&ag.hiddenChildren.length)||(ag.pts&&ag.pts.length);
   // Show as collapsed by default when no matching requests, but still expandable
   const arrowCls = ag.expanded ? 'open' : 'closed';
@@ -3527,7 +4980,7 @@ function renderFacRow(ag,cols,depth){
 }
 
 function renderSubRow(sub,ag,cols,depth,mode){
-  const pad=8+(depth+1)*16;
+  const pad=8+(depth+1)*20;
   const rawLabel=sub.full||sub.label;
   const label = ['Any shift','All shifts','Any'].includes(rawLabel) ? '' : rawLabel;
 
@@ -3548,6 +5001,17 @@ function renderSubRow(sub,ag,cols,depth,mode){
   // Find requests matching this shift/PT
   if(mode==='shift' || mode==='agency'){
     const stdReqs=(ag.reqs||[]).filter(r=>statusFilters.has(r.status)&&r.shiftId===sub.id);
+    // Placement row for this shift — filter placements whose request matches this shift
+    if(showPlacements){
+      const shiftReqIds = new Set((ag.reqs||[]).filter(r=>r.shiftId===sub.id).map(r=>r.id));
+      // Filter by shiftId directly on placement (most precise), fall back to req-based match
+      const shiftPlcs = (PLACEMENTS_BY_AGENCY[ag.name]||[]).filter(p=>{
+        if(p.shiftId) return p.shiftId === sub.id;
+        // fallback: placement's reqId matches a req on this shift
+        return shiftReqIds.has(p.reqId);
+      });
+      h += renderPlacementRow(shiftPlcs, depth+1, ag.name);
+    }
     if(showEP && stdReqs.length){
       // EP rows only when EP toggle on
       h+=renderEpGroupRows(stdReqs,ag,cols,depth+1,sub.id);
@@ -3557,6 +5021,16 @@ function renderSubRow(sub,ag,cols,depth,mode){
     }
   } else if(mode==='pt'){
     const ptReqs=(ag.reqs||[]).filter(r=>statusFilters.has(r.status)&&r.ptId===sub.id);
+    // Placement row for this PT — filter placements whose request matches this PT
+    if(showPlacements){
+      const ptReqIds = new Set((ag.reqs||[]).filter(r=>r.ptId===sub.id).map(r=>r.id));
+      // Filter by ptId directly on placement (most precise), fall back to req-based match
+      const ptPlcs = (PLACEMENTS_BY_AGENCY[ag.name]||[]).filter(p=>{
+        if(p.ptId) return p.ptId === sub.id;
+        return ptReqIds.has(p.reqId);
+      });
+      h += renderPlacementRow(ptPlcs, depth+1, ag.name);
+    }
     if(showEP){
       h+=renderEpGroupRows(ptReqs,ag,cols,depth+1,null);
     } else {
@@ -3571,7 +5045,7 @@ function renderReqRowLeg(r,leg,cols,depth){
   // Renders one "leg" of a mixed-shift request under a specific shift sub-row
   // Label shows full req info; chips only appear on this leg's days
   const cc={pending:'rc-p',offered:'rc-o',published:'rc-pu',rejected:'rc-r'}[r.status]||'rc-p';
-  const pad=8+(depth+1)*16;
+  const pad=8+(depth+1)*20;
   // Option 1 (chipStyle:'ep'): Req ID only on line 1
   // Option 2 (chipStyle:'shift'): Req ID + EP name on line 1
   const line1 = r.chipStyle==='shift'
@@ -3703,6 +5177,11 @@ function renderEpGroupRows(reqs, ag, cols, depth, parentShiftId){
     const isCollapsed = epCollapsed[k] !== false; // default collapsed
     rows += renderEpCountRow(group, ag, cols, depth, isCollapsed);
     if(!isCollapsed){
+      // Placement row for this EP — filter by ep and agency
+      if(showPlacements && ag){
+        const epPlcs = (PLACEMENTS_BY_AGENCY[ag.name]||[]).filter(p=>p.ep === group.ep);
+        rows += renderPlacementRow(epPlcs, depth, ag.name, group.ep);
+      }
       group.reqs.forEach(r=>{ rows += renderReqAndPlacements(r, cols, depth+1); });
     }
   });
@@ -3711,7 +5190,7 @@ function renderEpGroupRows(reqs, ag, cols, depth, parentShiftId){
 }
 
 function renderEpCountRow(group, ag, cols, depth, isCollapsed){
-  const pad = 8 + (depth+1)*16;
+  const pad = 8 + (depth+1)*20;
   const label = group.ep;
   const epKey = group.ep;
   const totalReqs = group.reqs.length;
@@ -3784,12 +5263,8 @@ function renderEpCountRow(group, ag, cols, depth, isCollapsed){
 }
 
 function renderReqAndPlacements(r, cols, depth){
-
-  let h = renderReqRow(r, cols, depth);
-  if(showPlacements && PLACEMENTS_BY_REQ[r.id]){
-    PLACEMENTS_BY_REQ[r.id].forEach(p=>{ h += renderPlcRow(p, cols, depth); });
-  }
-  return h;
+  // Placement rows removed from grid — placements surface via agency badge + side sheet
+  return renderReqRow(r, cols, depth);
 }
 
 function renderReqRow(r,cols,depth){
@@ -3847,16 +5322,20 @@ function renderReqRow(r,cols,depth){
   const line2 = isStudent
     ? `${r.discipline||'Nursing'} · ${r.type} · ${r.year}${r.studentCode ? ` · ${r.studentCode}` : ''}`
     : `${r.discipline||'Nursing'} · ${r.type} · ${r.year}${datePart}`;
+  const condensedDateSpan = r.dates
+    ? `<span class="req-lbl-condensed-date">${shortenDates(r.dates)}</span>`
+    : '';
 
-  const pad=depth>0?8+(depth+1)*16:18;
+  const pad = depth < 0 ? 46 : depth === 0 ? 28 : 8+(depth+1)*20;
   let h=`<tr class="tr-req"><td class="td-req-name" style="padding-left:${pad}px">
     <div class="req-lbl-wrap">
       <div class="req-lbl-top">
         ${line1Parts}
+        ${condensedDateSpan}
         ${statusPill}
         ${studentBadge}
       </div>
-      <div class="req-lbl-sub">${line2}</div>
+      <div class="req-lbl-sub">${line2}</div><span class="req-lbl-sub-tooltip">${line2}</span>
     </div>
   </td>`;
   for(let i=0;i<cols;i++){
@@ -3901,7 +5380,7 @@ function renderReqRow(r,cols,depth){
 
 function renderGhost(ag,cols,depth){
   const n=ag.hiddenChildren.length;
-  const pad=8+(depth+1)*16;
+  const pad=8+(depth+1)*20;
   const lbl=ag.ghostExpanded?`∨ ${n} hidden by filter`:`› ${n} hidden by filter`;
   let h=`<tr class="tr-ghost"><td class="td-ghost" style="padding-left:${pad}px" data-ghost="${ag.id}">${lbl}</td>`;
   for(let i=0;i<cols;i++) h+=`<td></td>`;
@@ -3909,7 +5388,7 @@ function renderGhost(ag,cols,depth){
 }
 
 function renderHidden(hc,cols,depth){
-  const pad=8+(depth+2)*16;
+  const pad=8+(depth+2)*20;
   let h=`<tr class="tr-hidden"><td style="padding:0"><div class="td-hidden" style="padding-left:${pad}px">
     ${hc.name}
     <button class="info-ico" title="${hc.reasons.join(', ')}"><svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:#ccc"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></button>
@@ -3919,7 +5398,7 @@ function renderHidden(hc,cols,depth){
 }
 
 function renderEmptySubRow(msg,cols,depth){
-  const pad=8+(depth+1)*16;
+  const pad=8+(depth+1)*20;
   let h=`<tr class="tr-sub"><td class="td-sub-name" style="padding-left:${pad}px;color:#bbb;font-style:italic">${msg}</td>`;
   for(let i=0;i<cols;i++) h+=`<td class="td-sub-num"></td>`;
   return h+'</tr>';
@@ -3997,6 +5476,16 @@ function posPlcTooltip(e){
 }
 
 /* ─── TOOLTIP ACTIONS ──────────────────────────── */
+function reinstateRequest(rid){
+  const r = REQ_META[rid];
+  if(!r) return;
+  r.status = 'pending';
+  document.getElementById('reqTooltip').classList.remove('visible');
+  render();
+  refreshCounters();
+  showAllocToast('Request reinstated', `${r.reqNum} moved back to Pending`);
+}
+
 function renderTooltipActions(r){
   const el = document.getElementById('ttActions');
   const isPartial = !r.reqType && r.allocated && r.allocated > 0 && r.allocated < r.qty;
@@ -4023,7 +5512,7 @@ function renderTooltipActions(r){
     html = '';
   } else if(r.status === 'rejected'){
     el.className = 'tt-actions';
-    html += `<span class="tt-note">Reinstate from Request List</span>`;
+    html += `<button class="tt-btn tt-btn-p" onclick="reinstateRequest('${r.id}')">Reinstate</button>`;
   } else {
     el.className = 'tt-actions';
     html = '';
@@ -4110,37 +5599,21 @@ function posTooltip(e){
 /* ─── EP CHART ──────────────────────────────────── */
 let epOpen=false;
 function updateSummaryBar(){
-  const _isTulsaSB = document.getElementById('fRegion').value === 'tulsa';
-  const allReqs = [
-    ...(_isTulsaSB ? TULSA_REQS : VICTORIA_REQS),
-    ...getAllReqs()
-  ];
-  const counts = {all:0, pending:0, offered:0, published:0, rejected:0};
-  allReqs.forEach(r=>{
-    counts.all++;
-    if(r.status==='pending')   counts.pending++;
-    else if(r.status==='offered') counts.offered++;
-    else if(r.status==='published') counts.published++;
-    else if(['rejected','withdrawn-ep','withdrawn-student'].includes(r.status)) counts.rejected++;
-  });
-  document.getElementById('sum-all').textContent       = counts.all;
-  document.getElementById('sum-pending').textContent   = counts.pending;
-  document.getElementById('sum-offered').textContent   = counts.offered;
-  document.getElementById('sum-rejected').textContent  = counts.rejected;
+  // Replaced by updateStatusIndicator — kept as no-op to avoid breaking render() call
+  updateStatusIndicator();
 }
 
 function setSummaryFilter(status){
-  // Update active card
-  document.querySelectorAll('.summary-card').forEach(c=>c.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  // Summary cards removed — no-op
+}
 
-  // Update status filter dropdown to match
+function msStatusSelectAll(e){
+  e.stopPropagation();
   const wrap = document.getElementById('msStatus');
-  if(!wrap) return;
-  wrap.querySelectorAll('input[type=checkbox]').forEach(b=>{
-    if(status==='all') b.checked = true;
-    else b.checked = b.value === status;
-  });
+  const boxes = wrap.querySelectorAll('input[type=checkbox]');
+  const allChecked = [...boxes].every(b=>b.checked);
+  boxes.forEach(b=>b.checked=!allChecked);
+  e.target.textContent = allChecked ? 'Select all' : 'Deselect all';
   msStatusChanged();
 }
 
@@ -4158,17 +5631,78 @@ function msStatusChanged(){
   statusFilters.clear();
   checked.forEach(b=>statusFilters.add(b.value));
 
-  // If nothing selected, show all (treat as no filter)
+  const labelMap = {
+    pending:'Pending', offered:'Offered', allocated:'Allocated',
+    rejected:'Rejected', completed:'Completed',
+    'withdrawn-ep':'Withdrawn EP', 'withdrawn-student':'Withdrawn Student'
+  };
+
+  const ALL_STATUSES = ['pending','offered','allocated','rejected','completed','withdrawn-ep','withdrawn-student'];
+
   if(checked.length === 0){
     valEl.className = 'ms-value placeholder';
     valEl.textContent = 'All statuses';
-    ['pending','offered','rejected','published'].forEach(s=>statusFilters.add(s));
-  } else {
+    ALL_STATUSES.forEach(s=>statusFilters.add(s));
+  } else if(checked.length === 1){
     valEl.className = 'ms-value';
-    valEl.textContent = checked.map(b=>b.value.charAt(0).toUpperCase()+b.value.slice(1)).join(', ');
+    const val = checked[0].value;
+    valEl.innerHTML = `<span class="sel-pill sel-pill-${val}">${labelMap[val]||val}</span>`;
+  } else if(checked.length === 2){
+    valEl.className = 'ms-value';
+    valEl.innerHTML = checked.map(b=>`<span class="sel-pill sel-pill-${b.value}">${labelMap[b.value]||b.value}</span>`).join('');
+  } else {
+    // 3+ — show first two + overflow count
+    valEl.className = 'ms-value';
+    const firstTwo = checked.slice(0,2).map(b=>`<span class="sel-pill sel-pill-${b.value}">${labelMap[b.value]||b.value}</span>`).join('');
+    const overflow = checked.length - 2;
+    valEl.innerHTML = `${firstTwo}<span class="sel-pill-more">+${overflow}</span>`;
   }
 
   render();
+  updateStatusIndicator();
+}
+
+function updateStatusIndicator(){
+  const wrap = document.getElementById('msStatus');
+  if(!wrap) return;
+  const checked = [...wrap.querySelectorAll('input[type=checkbox]:checked')];
+  const textEl = document.getElementById('statusIndicatorText');
+  if(!textEl) return;
+
+  const _isTulsa = document.getElementById('fRegion').value === 'tulsa';
+  // Total across ALL statuses regardless of filter — the full dataset for context
+  const allReqsUnfiltered = [
+    ...(_isTulsa ? TULSA_REQS : VICTORIA_REQS),
+    ...getAllReqs()
+  ];
+  const totalAll = allReqsUnfiltered.length;
+
+  // Visible = matches statusFilters AND any other active filters
+  // We approximate by counting what's in statusFilters from the full dataset
+  const statusMatchCount = allReqsUnfiltered.filter(r=>statusFilters.has(r.status)).length;
+
+  // Currently visible in grid (after ALL filters) — count rendered rows
+  // We use statusFilters as proxy; other filters reduce this further
+  const visibleCount = allReqsUnfiltered.filter(r=>statusFilters.has(r.status)).length;
+
+  const labelMap = {
+    pending:'Pending', offered:'Offered', allocated:'Allocated',
+    rejected:'Rejected', completed:'Completed',
+    'withdrawn-ep':'Withdrawn EP', 'withdrawn-student':'Withdrawn Student'
+  };
+
+  if(checked.length === 0){
+    // All / blank
+    textEl.textContent = `Showing ${totalAll} Request${totalAll!==1?'s':''}`;
+  } else if(checked.length === 1){
+    const status = checked[0].value;
+    const label = labelMap[status] || status;
+    // Single status: "X Pending of Y Requests"
+    textEl.textContent = `Showing ${statusMatchCount} ${label} of ${totalAll} Requests`;
+  } else {
+    // Multiple statuses: just total visible + count of statuses selected
+    textEl.textContent = `Showing ${visibleCount} Request${visibleCount!==1?'s':''} · ${checked.length} statuses selected`;
+  }
 }
 
 function msStatusRemove(val, e){
@@ -4817,7 +6351,64 @@ function renderAllocCells(caps, focusReq, cls, agId){
     if(v!==null && v!==undefined && inReq && deduction > 0) v = v - deduction;
     const pos = v!==null&&v!==undefined&&v>0;
     const neg = v!==null&&v!==undefined&&v<0;
-    html += `<div class="${cls}${pos?' pos':''}${neg?' neg':''}${wknd?' wknd':''}${inReq?' in-req':''}${hidden?' hidden-col':''}">${v!==null&&v!==undefined?v:''}</div>`;
+
+    // Build placement summary for this cell (offered/published only — no drafts)
+    // Summary text lives under agency row label — NOT inside cells
+    // Cells only show a persistent "View →" indicator when placements exist
+    let summaryHtml = '';
+    let hoverBarHtml = '';
+    if(agId && inReq && !rotationMode){
+      const plcs = allocDraftPlacements.filter(p=>
+        p.reqId===currentAllocReqId &&
+        p.agId===agId &&
+        p.status && p.status!=='draft' &&
+        isDateInPlacement(d, p)
+      );
+      if(plcs.length){
+        const offered   = plcs.filter(p=>p.status==='offered').length;
+        const published = plcs.filter(p=>p.status==='published').length;
+        const parts=[];
+        if(offered)   parts.push(`${offered} Offered`);
+        if(published) parts.push(`${published} Published`);
+        hoverBarHtml = `<div class="ag-cell-popover">
+          <div class="ag-cell-pop-title">${parts.join(' · ')}</div>
+          <button class="ag-cell-pop-btn primary" onclick="event.stopPropagation();openVpSheet('${agId}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            View placements
+          </button>
+        </div>`;
+      }
+    }
+    if(agId && inReq && rotationMode){
+      const plcs = allocDraftPlacements.filter(p=>
+        p.reqId===currentAllocReqId &&
+        p.isRotation &&
+        p.status && p.status!=='draft' &&
+        p.rotSelections && p.rotSelections.some(s=>s.agId===agId && isDateInPlacement(d,{dates:p.dates,rotSelections:p.rotSelections}))
+      );
+      if(plcs.length){
+        const offered = plcs.filter(p=>p.status==='offered').length;
+        const published = plcs.filter(p=>p.status==='published').length;
+        const parts=[];
+        if(offered)   parts.push(`${offered} Offered`);
+        if(published) parts.push(`${published} Published`);
+        const cls2 = published>0?'has-published':'has-offered';
+        summaryHtml = `<span class="ag-cell-plc-summary ${cls2}">${parts.join('·')}</span>`;
+        hoverBarHtml = `<div class="ag-cell-popover">
+          <div class="ag-cell-pop-title">${parts.join(' · ')}</div>
+          <button class="ag-cell-pop-btn primary" onclick="event.stopPropagation();openVpSheet('${agId}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            View placements
+          </button>
+          <button class="ag-cell-pop-btn" onclick="event.stopPropagation();">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            Select cell
+          </button>
+        </div>`;
+      }
+    }
+
+    html += `<div class="${cls}${pos?' pos':''}${neg?' neg':''}${wknd?' wknd':''}${inReq?' in-req':''}${hidden?' hidden-col':''}" style="flex-direction:column;gap:1px;">${v!==null&&v!==undefined?v:''}${summaryHtml}${hoverBarHtml}</div>`;
   }
   return html;
 }
@@ -4887,6 +6478,19 @@ function renderAgencyBlock(ag, focusReq, depth, isPinned){
             : (hasPtSignal && reqPt)
               ? `<span class="ag-lbl-sub" style="font-size:10px;color:#555">${reqPt} · auto-assign</span>`
               : ''}
+        ${(()=>{
+          if(rotationMode) return '';
+          const agPlcs = allocDraftPlacements.filter(p=>p.reqId===currentAllocReqId && p.agId===ag.id && p.status && p.status!=='draft');
+          if(!agPlcs.length) return '';
+          const offered   = agPlcs.filter(p=>p.status==='offered').length;
+          const published = agPlcs.filter(p=>p.status==='published').length;
+          const draft     = allocDraftPlacements.filter(p=>p.reqId===currentAllocReqId&&p.agId===ag.id&&(!p.status||p.status==='draft')).reduce((s,p)=>s+p.qty,0);
+          const parts=[];
+          if(draft)     parts.push(`<span class="ps-chip draft">Draft: ${draft}</span>`);
+          if(offered)   parts.push(`<span class="ps-chip offered">Offered: ${offered}</span>`);
+          if(published) parts.push(`<span class="ps-chip published">Published: ${published}</span>`);
+          return `<span class="ag-plc-subtext">${parts.join('')}<span class="ag-plc-view-trigger" onclick="event.stopPropagation();openVpSheet('${ag.id}')">View placements →</span></span>`;
+        })()}
       </div>
       ${isReqAg ? `<span class="ag-req-badge">★ Requested</span>` : ''}
       ${agRowAllocHtml}
@@ -5514,144 +7118,534 @@ function clearDrafts(){
 }
 
 function updateBottomBar(){
-  const drafts = allocDraftPlacements.filter(d=>d.reqId===currentAllocReqId&&(!d.status||d.status==='draft'));
   const bar = document.getElementById('allocBottomBar');
   const status = document.getElementById('abbStatus');
   if(!bar||!status) return;
-  // In rotation mode, don't show standard bottom bar — rotation rail handles review
-  if(rotationMode){ bar.classList.remove('show'); return; }
-  const totalQty = drafts.reduce((s,d)=>s+d.qty,0);
-  const shiftCount = drafts.length;
-  if(totalQty > 0){
-    status.textContent = `${totalQty} placement${totalQty!==1?'s':''} drafted across ${shiftCount} shift${shiftCount!==1?'s':''}`;
+  const drafts = allocDraftPlacements.filter(d=>d.reqId===currentAllocReqId&&(!d.status||d.status==='draft'));
+  const totalQty = drafts.reduce((s,d)=>s+(d.qty||1),0);
+  const agSet = new Set(drafts.map(d=>d.agId));
+  if(totalQty>0){
+    status.textContent = `${totalQty} placement${totalQty!==1?'s':''} drafted across ${agSet.size} agenc${agSet.size!==1?'ies':'y'}`;
     bar.classList.add('show');
   } else {
     bar.classList.remove('show');
   }
 }
 
-/* ── PLACEMENT RAIL FUNCTIONS ── */
+/* ── PLACEMENT WORKSPACE TRAY ── */
+/* ══ BOTTOM PLACEMENT WORKSPACE ══════════════════════ */
+
+let ptActiveTab = 'drafts'; // drafts | rotations | offered
+
 function showPlacementRail(){
-  document.getElementById('placementRail')?.classList.add('open');
+  const tray = document.getElementById('placementTray');
+  if(tray){ tray.classList.add('visible'); }
+  const footer = document.getElementById('ptFooter');
+  if(footer) footer.style.display = '';
+  renderPlacementRail();
 }
-
 function hidePlacementRail(){
-  document.getElementById('placementRail')?.classList.remove('open');
+  const tray = document.getElementById('placementTray');
+  if(tray){ tray.classList.remove('visible','expanded'); }
+}
+function collapsePlacementRail(){
+  const tray = document.getElementById('placementTray');
+  if(tray){ tray.classList.remove('expanded'); }
+  const lbl = document.getElementById('ptExpandLabel');
+  if(lbl) lbl.textContent = 'Expand';
+}
+function toggleTrayExpand(){
+  const tray = document.getElementById('placementTray');
+  if(!tray) return;
+  const expand = !tray.classList.contains('expanded');
+  tray.classList.toggle('expanded', expand);
+  const lbl = document.getElementById('ptExpandLabel');
+  if(lbl) lbl.textContent = expand ? 'Collapse' : 'Expand';
+}
+function switchTrayTab(tab){
+  ptActiveTab = tab;
+  ['drafts','rotations','offered'].forEach(t=>{
+    const el = document.getElementById('ptTab'+t.charAt(0).toUpperCase()+t.slice(1));
+    if(el) el.className = 'pt-tab' + (t===tab ? (tab==='rotations'?' rotation-active':' active'):'');
+  });
+  renderPlacementRail();
 }
 
-function collapsePlacementRail(){
-  hidePlacementRail();
+/* Enter/exit rotation composition mode in tray */
+function enterTrayCompositionMode(){
+  document.getElementById('ptBody').style.display = 'none';
+  document.getElementById('ptComposition').classList.add('active');
+  document.getElementById('ptTabs').style.opacity = '0.5';
+  document.getElementById('ptTabs').style.pointerEvents = 'none';
+  const saveBtn = document.getElementById('btnPtSaveRot');
+  const clearBtn = document.getElementById('btnPtClearSel');
+  if(saveBtn) saveBtn.classList.add('show');
+  if(clearBtn) clearBtn.classList.add('show');
+  document.getElementById('btnPtReview') && (document.getElementById('btnPtReview').style.display = 'none');
+  document.querySelector('.btn-pt-clear') && (document.querySelector('.btn-pt-clear').style.display = 'none');
+  const btnRej = document.getElementById('btnPtReject');
+  if(btnRej) btnRej.classList.remove('show');
+  // Auto-expand tray
+  const tray = document.getElementById('placementTray');
+  if(tray && !tray.classList.contains('expanded')){ tray.classList.add('visible','expanded'); const lbl=document.getElementById('ptExpandLabel'); if(lbl) lbl.textContent='Collapse'; }
+}
+function exitTrayCompositionMode(){
+  document.getElementById('ptBody').style.display = '';
+  document.getElementById('ptComposition').classList.remove('active');
+  document.getElementById('ptTabs').style.opacity = '';
+  document.getElementById('ptTabs').style.pointerEvents = '';
+  const saveBtn = document.getElementById('btnPtSaveRot');
+  const clearBtn = document.getElementById('btnPtClearSel');
+  if(saveBtn) saveBtn.classList.remove('show');
+  if(clearBtn) clearBtn.classList.remove('show');
+  document.getElementById('btnPtReview').style.display = '';
+  document.querySelector('.btn-pt-clear') && (document.querySelector('.btn-pt-clear').style.display = '');
+  renderPlacementRail();
+}
+function clearRotationSelection(){
+  rotationSelections = [];
+  renderRotationTally();
+  renderTrayComposition();
+}
+
+/* Render the rotation composition panel inside tray */
+function renderTrayComposition(){
+  const r = REQ_META[currentAllocReqId];
+  const timeline = document.getElementById('ptCompTimeline');
+  const exposure = document.getElementById('ptCompExposure');
+  const plcLabel = document.getElementById('ptCompPlcLabel');
+  if(!timeline||!exposure) return;
+
+  // Determine current placement number
+  const savedRot = allocDraftPlacements.filter(d=>d.reqId===currentAllocReqId&&d.isRotation);
+  const plcNum = savedRot.length + 1;
+  if(plcLabel) plcLabel.textContent = `Placement ${plcNum}`;
+
+  const sel = rotationSelections || [];
+  if(!sel.length){
+    timeline.innerHTML = `<div class="pt-comp-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>Click cells in the grid above to add shifts to the rotation.</p></div>`;
+    exposure.innerHTML = `<div class="pt-comp-empty" style="height:auto;padding:16px 12px;"><p>Select cells to see potential exposure.</p></div>`;
+    // footer hint
+    const fl = document.getElementById('ptFooterLeft');
+    if(fl) fl.textContent = 'No cells selected yet';
+    const saveBtn = document.getElementById('btnPtSaveRot');
+    if(saveBtn) saveBtn.disabled = true;
+    return;
+  }
+
+  // PT color map
+  const ptColors = ['#7c3aed','#2563eb','#0891b2','#059669','#d97706','#dc2626','#9333ea'];
+  const ptSet = [...new Set(sel.map(s=>s.ptLabel||'Unknown'))];
+  const colorMap = Object.fromEntries(ptSet.map((p,i)=>[p,ptColors[i%ptColors.length]]));
+
+  // Timeline rows
+  timeline.innerHTML = sel.map(s=>{
+    const color = colorMap[s.ptLabel||'Unknown'];
+    const dayAbbr = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const label = s.dateLabel || (s.dayIdx!==undefined ? dayAbbr[s.dayIdx%7] : '—');
+    return `<div class="pt-tl-row">
+      <span class="pt-tl-day">${label}</span>
+      <span class="pt-tl-dot" style="background:${color}"></span>
+      <span class="pt-tl-type">${s.ptLabel||'—'}</span>
+      <span class="pt-tl-agency">${(s.agId||'').substring(0,12)}</span>
+      <button class="pt-tl-rm" onclick="removeRotationSelection(${JSON.stringify({agId:s.agId,dayIdx:s.dayIdx}).replace(/"/g,'&quot;')})">×</button>
+    </div>`;
+  }).join('');
+
+  // Exposure tally
+  const tally = {};
+  sel.forEach(s=>{ const k=s.ptLabel||'Unknown'; tally[k]=(tally[k]||0)+1; });
+  const maxVal = Math.max(...Object.values(tally));
+  exposure.innerHTML = Object.entries(tally).map(([type,days])=>{
+    const color = colorMap[type];
+    const pct = Math.round((days/maxVal)*100);
+    return `<div class="pt-exp-row">
+      <span class="pt-exp-type" title="${type}">${type}</span>
+      <div class="pt-exp-bar-wrap"><div class="pt-exp-bar" style="background:${color};width:${pct}%"></div></div>
+      <span class="pt-exp-days">${days}d</span>
+    </div>`;
+  }).join('');
+
+  const fl = document.getElementById('ptFooterLeft');
+  if(fl) fl.textContent = `${sel.length} day${sel.length!==1?'s':''} selected · ${ptSet.length} placement type${ptSet.length!==1?'s':''}`;
+  const saveBtn = document.getElementById('btnPtSaveRot');
+  if(saveBtn) saveBtn.disabled = false;
+}
+
+function removeRotationSelection(key){
+  if(!rotationSelections) return;
+  rotationSelections = rotationSelections.filter(s=>!(s.agId===key.agId&&s.dayIdx===key.dayIdx));
+  renderRotationTally();
+  renderTrayComposition();
+}
+
+function rejectRemainingFromRail(){
+  const r = REQ_META[currentAllocReqId];
+  if(!r) return;
+  const drafts = allocDraftPlacements.filter(d=>d.reqId===currentAllocReqId&&(!d.status||d.status==='draft'));
+  const draftQty = drafts.reduce((s,d)=>s+d.qty,0);
+  const remaining = Math.max(0, r.qty-(r.allocated||0)-draftQty);
+  if(remaining<=0) return;
+  if(!confirm(`Reject ${remaining} unallocated placement${remaining!==1?'s':''}? The ${draftQty} drafted will be kept.`)) return;
+  r.allocated=(r.allocated||0)+draftQty; r.status='offered';
+  renderPlacementRail(); updateBottomBar(); refreshCounters();
+}
+function rejectAllFromRail(){
+  const r = REQ_META[currentAllocReqId];
+  if(!r) return;
+  if(!confirm(`Reject all ${r.qty} placements and close this request?`)) return;
+  allocDraftPlacements = allocDraftPlacements.filter(d=>d.reqId!==currentAllocReqId);
+  r.status='rejected'; hidePlacementRail();
+  renderAllocRows(currentAllocReqId); updateBottomBar(); refreshCounters();
 }
 
 function renderPlacementRail(){
   const r = REQ_META[currentAllocReqId];
   if(!r) return;
+
   const allDrafts = allocDraftPlacements.filter(d=>d.reqId===currentAllocReqId);
-  const draftCards  = allDrafts.filter(d=>!d.status||d.status==='draft');
-  const offeredCards= allDrafts.filter(d=>d.status==='offered');
-  const pubCards    = allDrafts.filter(d=>d.status==='published');
+  const draftStd   = allDrafts.filter(d=>(!d.status||d.status==='draft')&&!d.isRotation);
+  const draftRot   = allDrafts.filter(d=>(!d.status||d.status==='draft')&&d.isRotation);
+  const offeredAll = allDrafts.filter(d=>d.status==='offered');
+  const pubAll     = allDrafts.filter(d=>d.status==='published');
 
-  // Summary counters
-  // For rotation: drafted = number of rotation placement drafts (not total days)
-  // For standard: drafted = total qty across all draft allocations
-  const isRotationReq = r.type === 'Rotation';
-  const draftOnly2 = allDrafts.filter(d=>!d.status||d.status==='draft');
-  const drafted = isRotationReq
-    ? draftOnly2.filter(d=>d.isRotation).length
-    : draftOnly2.reduce((s,d)=>s+d.qty,0);
-  // For rotation: allocated = number of non-draft (offered/published) rotation placements
-  const allocatedRot = isRotationReq
-    ? allDrafts.filter(d=>d.isRotation && d.status && d.status !== 'draft').length
-    : r.allocated||0;
-  const remaining = isRotationReq
+  const isRotReq = r.type==='Rotation';
+  const drafted = isRotReq ? draftRot.length : draftStd.reduce((s,d)=>s+d.qty,0);
+  const remaining = isRotReq
     ? Math.max(0, r.qty - allDrafts.filter(d=>d.isRotation).length)
-    : Math.max(0, r.qty - (r.allocated||0));
-  document.getElementById('prSumRequested').textContent = r.qty;
-  document.getElementById('prSumDrafted').textContent   = drafted;
-  document.getElementById('prSumRemaining').textContent  = Math.max(0, remaining);
+    : Math.max(0, r.qty - (r.allocated||0) - drafted);
 
-  // Empty state
-  document.getElementById('prEmpty').style.display = allDrafts.length ? 'none' : '';
+  /* ── collapsed bar chips ── */
+  const chipsEl = document.getElementById('ptCbChips');
+  if(chipsEl){
+    let html = '';
+    const stdCount = draftStd.reduce((s,d)=>s+d.qty,0);
+    if(stdCount>0) html += `<span class="pt-cb-chip drafts">${stdCount} Draft${stdCount!==1?'s':''}</span>`;
+    if(draftRot.length>0) html += `<span class="pt-cb-chip rotations">${draftRot.length} Rotation${draftRot.length!==1?'s':''}</span>`;
+    if(offeredAll.length>0) html += `<span class="pt-cb-chip offered">${offeredAll.length} Offered</span>`;
+    if(!html) html = `<span class="pt-cb-chip empty">No drafts yet — allocate from the grid above</span>`;
+    chipsEl.innerHTML = html;
+  }
 
-  // Build card HTML helper
-  function buildCards(list, container, sectionEl, status){
-    sectionEl.style.display = list.length ? '' : 'none';
-    container.innerHTML = list.map((d,i)=>{
-      const reqDrafts = allocDraftPlacements.filter(x=>x.reqId===currentAllocReqId);
-      const idx = reqDrafts.indexOf(d);
-      const agName = d.agName || d.agId;
-      const isDraft = !d.status || d.status === 'draft';
-      const isRotation = !!d.isRotation;
+  const remEl = document.getElementById('ptCbRemaining');
+  if(remEl){
+    if(allDrafts.length>0){
+      remEl.style.display='';
+      remEl.textContent = remaining>0 ? `${remaining} remaining` : 'Fulfilled ✓';
+      remEl.className = 'pt-cb-remaining' + (remaining===0?' done':'');
+    } else { remEl.style.display='none'; }
+  }
 
-      if(isRotation){
-        const exposureStr = (d.exposureTypes||[]).join(', ') || '—';
-        const plcLabel = `Rotation Placement ${d.rotPlcNum || (allDrafts.indexOf(d)+1)}`;
-        return `
-        <div class="pr-card ${status}" id="pr-card-${idx}" style="border-left-color:#7c3aed">
-          <div class="pr-card-hdr">
-            <span class="pr-card-title">${plcLabel}</span>
-            <span class="pr-card-badge ${status}" style="background:${d.status==='offered'?'#fef3c7':d.status==='published'?'#dcfce7':'#f5f3ff'};color:${d.status==='offered'?'#92400e':d.status==='published'?'#15803d':'#7c3aed'}">${d.status?d.status.charAt(0).toUpperCase()+d.status.slice(1):'Draft'}</span>
-            ${isDraft ? `<button class="pr-card-menu" onclick="removePlcCard(${idx})" title="Remove">×</button>` : ''}
-          </div>
-          <div class="pr-card-body">
-            <div class="pr-card-row"><span class="pr-card-lbl">Dates</span><span class="pr-card-val">${d.dates||'—'}</span></div>
-            <div class="pr-card-row"><span class="pr-card-lbl">Potential Exposure</span><span class="pr-card-val" title="${exposureStr}">${exposureStr}</span></div>
-            <div class="pr-card-row"><span class="pr-card-lbl">Days selected</span><span class="pr-card-val">${d.qty}</span></div>
-          </div>
-          ${isDraft ? `<div class="pr-card-actions">
-            <button class="pr-card-act" onclick="editRotationDraft(${idx})">Edit Composition</button>
-            <button class="pr-card-act danger" onclick="removePlcCard(${idx})">Remove</button>
-          </div>` : `<div class="pr-card-actions"><button class="pr-card-act" onclick="viewRotationDraft(${idx})">View selections</button></div>`}
+  /* ── tab counts ── */
+  const totalDrafts = draftStd.reduce((s,d)=>s+d.qty,0) + draftRot.length;
+  const setSafe = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+  setSafe('ptTabDraftsCount', totalDrafts);
+  setSafe('ptTabRotationsCount', draftRot.length);
+  setSafe('ptTabOfferedCount', offeredAll.length);
+  const rotTab = document.getElementById('ptTabRotations');
+  if(rotTab) rotTab.style.display = (isRotReq||draftRot.length>0)?'':'none';
+  const offTab = document.getElementById('ptTabOffered');
+  if(offTab) offTab.style.display = offeredAll.length>0?'':'none';
+
+  /* ── counters in tab bar ── */
+  setSafe('ptCtrRequested', r.qty);
+  setSafe('ptCtrDrafted', drafted);
+  const remCtr = document.getElementById('ptCtrRemaining');
+  if(remCtr){ remCtr.textContent=Math.max(0,remaining); remCtr.className='pt-ctr-val rem'+(remaining===0&&drafted>0?' done':''); }
+
+  /* ── pick list to show based on active tab ── */
+  let listDrafts = [];
+  if(ptActiveTab==='drafts')    listDrafts = [...draftStd, ...draftRot];
+  else if(ptActiveTab==='rotations') listDrafts = draftRot;
+  else if(ptActiveTab==='offered')   listDrafts = [...offeredAll, ...pubAll];
+
+  /* ── build grouped list ── */
+  const emptyEl = document.getElementById('ptEmptyState');
+  const groupEl = document.getElementById('ptGroupList');
+  if(!emptyEl||!groupEl) return;
+
+  if(!listDrafts.length){
+    emptyEl.style.display='flex'; groupEl.innerHTML='';
+  } else {
+    emptyEl.style.display='none';
+    // Group by agency
+    const groups = {};
+    listDrafts.forEach((d,i)=>{
+      const key = d.agName||d.agId||'Unknown Agency';
+      if(!groups[key]) groups[key]=[];
+      groups[key].push({d, globalIdx: allocDraftPlacements.filter(x=>x.reqId===currentAllocReqId).indexOf(d)});
+    });
+    let pNum=0;
+    groupEl.innerHTML = Object.entries(groups).map(([agName, items])=>{
+      const rows = items.map(({d,globalIdx})=>{
+        pNum++;
+        const isDraft = !d.status||d.status==='draft';
+        const status = d.status||'draft';
+        const isRot = !!d.isRotation;
+        const idStr = `P-${String(globalIdx+1).padStart(3,'0')}`;
+        const shiftLabel = isRot
+          ? `Rotation (${d.qty} days)`
+          : (d.shiftLabel||'—');
+        const dates = d.dates||(r.dates||'—');
+        const statusCls = isRot&&isDraft?'rotation':status;
+        const statusLbl = isRot&&isDraft?'Rotation':status.charAt(0).toUpperCase()+status.slice(1);
+        return `<div class="pt-row" onclick="focusPlacementInGrid(${globalIdx})">
+          <span class="pt-row-id">${idStr}</span>
+          <span class="pt-row-shift">${shiftLabel}</span>
+          <span class="pt-row-dates">${dates}</span>
+          <span class="pt-row-status"><span class="sbadge ${statusCls}">${statusLbl}</span></span>
+          <span class="pt-row-actions">
+            ${isDraft?`<button class="pt-row-act danger" onclick="event.stopPropagation();removePlcCard(${globalIdx})">Remove</button>`:''}
+          </span>
         </div>`;
-      }
-
-      return `
-      <div class="pr-card ${status}" id="pr-card-${idx}">
-        <div class="pr-card-hdr">
-          <span class="pr-card-title">Placement ${i+1}</span>
-          <span class="pr-card-badge ${status}">${status.charAt(0).toUpperCase()+status.slice(1)}</span>
-          ${isDraft ? `<button class="pr-card-menu" onclick="removePlcCard(${idx})" title="Remove">×</button>` : ''}
+      }).join('');
+      return `<div class="pt-agency-group" id="ptGroup_${agName.replace(/\s/g,'_')}">
+        <div class="pt-agency-hdr" onclick="toggleAgencyGroup(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11" class="pt-agency-chevron"><path d="m6 9 6 6 6-6"/></svg>
+          <span class="pt-agency-name">${agName}</span>
+          <span class="pt-agency-count">${items.length}</span>
         </div>
-        <div class="pr-card-body">
-          <div class="pr-card-row"><span class="pr-card-lbl">Agency</span><span class="pr-card-val" title="${agName}">${agName}</span></div>
-          <div class="pr-card-row"><span class="pr-card-lbl">Shift</span><span class="pr-card-val">${d.shiftLabel||'—'}</span></div>
-          <div class="pr-card-row"><span class="pr-card-lbl">Quantity</span><span class="pr-card-val">${d.qty} placement${d.qty!==1?'s':''}</span></div>
-          <div class="pr-card-row"><span class="pr-card-lbl">Dates</span><span class="pr-card-val">${d.dates||r.dates||'—'}</span></div>
-        </div>
-        ${isDraft ? `<div class="pr-card-actions">
-          <button class="pr-card-act danger" onclick="removePlcCard(${idx})">Remove</button>
-        </div>` : `<div class="pr-card-actions">
-          <button class="pr-card-act">View</button>
-        </div>`}
+        <div class="pt-rows">${rows}</div>
       </div>`;
     }).join('');
   }
 
-  const reqDraftsFlat = allocDraftPlacements.filter(d=>d.reqId===currentAllocReqId);
-  buildCards(draftCards,   document.getElementById('prDraftCards'),     document.getElementById('prDraftSection'),     'draft');
-  buildCards(offeredCards, document.getElementById('prOfferedCards'),   document.getElementById('prOfferedSection'),   'offered');
-  buildCards(pubCards,     document.getElementById('prPublishedCards'), document.getElementById('prPublishedSection'), 'published');
+  /* ── footer buttons ── */
+  const hasDrafts = totalDrafts>0;
+  const reviewBtn = document.getElementById('btnPtReview');
+  if(reviewBtn){ reviewBtn.disabled=!hasDrafts; }
+  const reviewBarBtn = document.getElementById('btnPtReviewBar');
+  if(reviewBarBtn){
+    reviewBarBtn.disabled=!hasDrafts;
+    reviewBarBtn.style.opacity = hasDrafts ? '1' : '0.4';
+    reviewBarBtn.style.cursor  = hasDrafts ? 'pointer' : 'not-allowed';
+  }
+  const rejBtn = document.getElementById('btnPtReject');
+  if(rejBtn){ rejBtn.classList.toggle('show', hasDrafts&&remaining>0); rejBtn.textContent=`Reject remaining (${remaining})`; }
 
-  // Footer summary
-  const totalQty = allDrafts.reduce((s,d)=>s+d.qty,0);
-  const shiftCount = allDrafts.length;
-  const agSet = new Set(allDrafts.map(d=>d.agId));
-  document.getElementById('prFooterSummary').textContent =
-    totalQty > 0
-      ? `${totalQty} placement${totalQty!==1?'s':''} · ${shiftCount} shift${shiftCount!==1?'s':''} · ${agSet.size} agency`
+  /* ── footer summary ── */
+  const fl = document.getElementById('ptFooterLeft');
+  if(fl){
+    fl.textContent = hasDrafts
+      ? `${totalDrafts} placement${totalDrafts!==1?'s':''} drafted · ${Object.keys(
+          listDrafts.reduce((a,d)=>({...a,[d.agName||d.agId]:1}),{})
+        ).length} agenc${Object.keys(listDrafts.reduce((a,d)=>({...a,[d.agName||d.agId]:1}),{})).length!==1?'ies':'y'}`
       : '';
+  }
 
-  // Enable/disable footer buttons based on draft presence
-  const reviewBtn = document.getElementById('btnPrReview');
-  const clearBtn  = document.querySelector('.btn-pr-clear');
-  const hasDrafts = draftCards.length > 0;
-  if(reviewBtn){ reviewBtn.disabled = !hasDrafts; }
-  if(clearBtn){
-    clearBtn.disabled = !hasDrafts;
-    clearBtn.style.opacity = hasDrafts ? '' : '0.4';
-    clearBtn.style.cursor  = hasDrafts ? '' : 'not-allowed';
+  /* ── show tray collapsed on first draft — never auto-expand ── */
+  const tray = document.getElementById('placementTray');
+  if(tray && hasDrafts){
+    tray.classList.add('visible');
+    // show footer (contains Review & Generate) whenever tray is visible
+    const footer = document.getElementById('ptFooter');
+    if(footer) footer.style.display = '';
   }
 }
+
+function isDateInPlacement(d, plc){
+  if(!plc) return false;
+  if(plc.rotSelections){
+    return plc.rotSelections.some(s=>{
+      if(s.dateStr){
+        const sd = new Date(s.dateStr);
+        return sd.toDateString()===d.toDateString();
+      }
+      // fallback: compare by dayIdx offset from BASE
+      const base = new Date(BASE);
+      const idx = Math.round((d - base) / 86400000);
+      return s.dayIdx === idx;
+    });
+  }
+  if(!plc.dates) return true;
+  const parts = plc.dates.split('–').map(x=>x.trim());
+  if(parts.length<2) return true;
+  const parseD = str=>{
+    const months={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+    const m=str.match(/(\d+)\s+([A-Za-z]+)(?:\s+(\d{4}))?/);
+    if(!m) return null;
+    const yr=m[3]?parseInt(m[3]):new Date().getFullYear();
+    return new Date(yr,months[m[2]],parseInt(m[1]));
+  };
+  const s=parseD(parts[0]), e=parseD(parts[1]);
+  if(!s||!e) return true;
+  return d>=s && d<=e;
+}
+
+function openVpSheet(agId){
+  const r = REQ_META[currentAllocReqId];
+  if(!r) return;
+  const ag = findAgById(agId);
+  const agName = ag ? ag.name : agId;
+  document.getElementById('vpTitle').textContent = `All Placements`;
+  document.getElementById('vpSub').textContent = `${r.ep||''} · Req ${currentAllocReqId}`;
+
+  // Show all offered/published placements for this request
+  const plcs = allocDraftPlacements.filter(p=>
+    p.reqId===currentAllocReqId && p.status && p.status!=='draft'
+  );
+
+  const body = document.getElementById('vpBody');
+  if(!plcs.length){
+    body.innerHTML=`<div class="vp-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><p>No offered or published placements yet.</p></div>`;
+  } else {
+    body.innerHTML = plcs.map((p,i)=>{
+      const status = p.status;
+      const isRot  = !!p.isRotation;
+      const badgeLbl = status.charAt(0).toUpperCase()+status.slice(1);
+      const idStr  = `P-${String(i+1).padStart(3,'0')}`;
+      const shift  = isRot ? 'Rotation' : (p.shiftLabel||'—');
+      const qty    = isRot ? `${p.qty} days` : `${p.qty} placement${p.qty!==1?'s':''}`;
+      const exposure = isRot ? (p.exposureTypes||[]).join(', ')||'—' : '';
+      return `<div class="vp-card ${status}">
+        <div class="vp-card-hdr">
+          <span class="vp-card-id">${idStr}</span>
+          <span class="vp-card-title">${p.agName||'—'}</span>
+          <span class="vp-card-badge ${status}">${badgeLbl}</span>
+        </div>
+        <div class="vp-card-rows">
+          <div class="vp-card-row"><span class="vp-card-lbl">Shift</span><span class="vp-card-val">${shift}</span></div>
+          <div class="vp-card-row"><span class="vp-card-lbl">Qty</span><span class="vp-card-val">${qty}</span></div>
+          <div class="vp-card-row"><span class="vp-card-lbl">Dates</span><span class="vp-card-val">${p.dates||r.dates||'—'}</span></div>
+          ${exposure?`<div class="vp-card-row"><span class="vp-card-lbl">Exposure</span><span class="vp-card-val">${exposure}</span></div>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+  // Detach rotation cell listener while sheet is open so clicks don't select cells
+  document.getElementById('agRows')?.removeEventListener('click', onRotationCellClick, true);
+  document.getElementById('vpOverlay').classList.add('open');
+  document.getElementById('vpSheet').classList.add('open');
+}
+
+function closeVpSheet(){
+  document.getElementById('vpOverlay').classList.remove('open');
+  document.getElementById('vpSheet').classList.remove('open');
+  // Re-attach rotation listener if still in rotation mode
+  if(rotationMode) document.getElementById('agRows')?.addEventListener('click', onRotationCellClick, true);
+}
+
+/* ── Placement side sheet — agency-scoped, status-grouped ── */
+const VP_MAX_PER_GROUP = 5;
+
+function openVpSheetForAgency(agencyName, total, epCode){
+  let placements = (PLACEMENTS_BY_AGENCY[agencyName]||[])
+    .filter(p=>!['cancelled','withdrawn'].includes(p.status));
+
+  // If called from a specific EP chip, filter to that EP only
+  if(epCode){
+    placements = placements.filter(p=>(p.epCode||p.ep)===epCode);
+    total = placements.length;
+  }
+
+  document.getElementById('vpTitle').textContent = epCode
+    ? `${agencyName} · ${epCode}`
+    : agencyName;
+  document.getElementById('vpSub').textContent =
+    `${total} placement${total!==1?'s':''} consuming capacity`;
+
+  const ORDER  = ['accepted','published','offered'];
+  const LABELS = {accepted:'Accepted',published:'Published',offered:'Offered'};
+  const BADGE  = {accepted:'accepted',published:'published',offered:'offered'};
+
+  const groups = {};
+  ORDER.forEach(s=>{ groups[s]=[]; });
+  placements.forEach(p=>{
+    if(groups[p.status]) groups[p.status].push(p);
+  });
+  // Sort each group — rotation placements first so they're visible within the cap
+  ORDER.forEach(s=>{
+    groups[s].sort((a,b)=> (b.isRotation?1:0) - (a.isRotation?1:0));
+  });
+
+  let html = '';
+  ORDER.forEach(status=>{
+    const list = groups[status];
+    if(!list.length) return;
+    const shown    = list.slice(0, VP_MAX_PER_GROUP);
+    const overflow = list.length - shown.length;
+
+    html += `<div class="vp-group-hdr">
+      <span class="vp-group-label">${LABELS[status]}</span>
+      <div class="vp-group-right">
+        ${overflow > 0
+          ? `<button class="vp-group-more"
+               onclick="alert('Full list for ${LABELS[status]} placements — placement list page TBD')">
+               +${overflow} more
+             </button>`
+          : ''}
+        <span class="vp-group-count">${list.length}</span>
+      </div>
+    </div>`;
+
+    shown.forEach(p=>{
+      const isRot = !!p.isRotation;
+      const metaParts = [];
+      if(p.type)  metaParts.push(`<span>${p.type}</span>`);
+      if(p.year)  metaParts.push(`<span class="sep">·</span><span>${p.year}</span>`);
+      if(p.shift && !isRot) metaParts.push(`<span class="sep">·</span><span>${p.shift}</span>`);
+      if(p.dates) metaParts.push(`<span class="sep">·</span><span>${p.dates}</span>`);
+
+      // Request trace — reqNum + status, always shown in muted grey
+      const req = REQ_META[p.reqId];
+      const reqNum = req?.reqNum || (p.reqId ? `Req: ${p.reqId.replace(/^r/,'')}` : null);
+      const reqStatus = req?.status || null;
+      const reqStatusCls = reqStatus ? `vp-req-${reqStatus}` : '';
+      const reqLine = reqNum
+        ? `<div class="vp-card-req">
+             <span class="vp-card-req-num">${reqNum}</span>
+             ${reqStatus ? `<span class="vp-card-req-status">${reqStatus.charAt(0).toUpperCase()+reqStatus.slice(1)}</span>` : ''}
+           </div>`
+        : '';
+
+      // Agency mismatch indicator
+      const mismatch = p.requestedAgencyName && p.agencyName !== p.requestedAgencyName
+        ? `<div style="font-size:9px;color:#e65100;margin-top:2px">
+             ⚠ Placed here — requested at ${p.requestedAgencyName}
+           </div>`
+        : '';
+
+      html += `<div class="vp-card ${status}">
+        <div class="vp-card-hdr">
+          <span class="vp-card-id">${p.plcNum}</span>
+          <span class="vp-card-badge ${BADGE[status]}">${LABELS[status]}</span>
+        </div>
+        <div class="vp-card-ep">${p.ep} · ${p.campus}</div>
+        <div class="vp-card-meta">${metaParts.join('')}</div>
+        ${isRot ? `<div class="vp-card-rotation">
+          <svg viewBox="0 0 24 24"><path d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"/></svg>
+          Rotation · ${p.rotationAgencies ? p.rotationAgencies.join(' → ') : 'Multi-ward'}
+        </div>` : ''}
+        ${reqLine}
+        ${mismatch}
+      </div>`;
+    });
+  });
+
+  if(!html){
+    html = `<div class="vp-empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32">
+        <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
+      </svg>
+      <p>No active placements consuming capacity at this agency.</p>
+    </div>`;
+  }
+
+  document.getElementById('vpBody').innerHTML = html;
+  document.getElementById('vpOverlay').classList.add('open');
+  document.getElementById('vpSheet').classList.add('open');
+}
+
+function toggleAgencyGroup(hdr){
+  const group = hdr.closest('.pt-agency-group');
+  if(group) group.classList.toggle('collapsed');
+}
+function focusPlacementInGrid(idx){
+  // Highlight placement in grid — visual cue only for prototype
+  const d = allocDraftPlacements.filter(x=>x.reqId===currentAllocReqId)[idx];
+  if(d) showToast('Focus placement', `Scrolling to ${d.agName||d.agId} in grid`);
+}
+
 
 function generatePlacements(type){
   const r = REQ_META[currentAllocReqId];
@@ -5671,8 +7665,7 @@ function generatePlacements(type){
       renderPlacementRail();
       renderAllocRows(currentAllocReqId);
       refreshCounters();
-      // Show empty frame to prompt next placement
-      showRotationFrame('Empty');
+      // Stay on grid — user selects cells directly for next placement
       renderRotationProgress();
     } else {
       // All placements done — show success
@@ -6034,20 +8027,18 @@ function toggleRotation(){
   const banner = document.getElementById('rotationActiveBanner');
   if(rotationMode){
     rotationPtTally = buildRotationTally();
-    // Reset per-session colour map
     Object.keys(_ptColorMap).forEach(k=>delete _ptColorMap[k]);
     _ptColorIdx = 0;
-    rail.classList.add('open');
+    if(rail) rail.classList.add('open');
     document.body.classList.add('rotation-mode');
     document.querySelectorAll('.ag-alloc-btn').forEach(b=>b.style.display='none');
     if(helper) helper.classList.remove('show');
     if(banner) banner.style.display='flex';
-    showRotationFrame('Empty');
     renderRotationProgress();
     renderRotationTally();
     document.getElementById('agRows').addEventListener('click', onRotationCellClick, true);
   } else {
-    rail.classList.remove('open');
+    if(rail) rail.classList.remove('open');
     document.body.classList.remove('rotation-mode');
     document.querySelectorAll('.ag-alloc-btn').forEach(b=>b.style.display='');
     if(helper) helper.classList.remove('show');
@@ -6323,7 +8314,7 @@ function onRotationCellClick(e){
     const d=new Date(BASE); d.setDate(d.getDate()+dayIdx);
     const r=REQ_META[currentAllocReqId];
     const inRange=r?isDateInRange(d,r):true;
-    rotationSelections.push({agId, agName: findAgById(agId)?.name||agId, shiftRowId, dayIdx, supportedPts, ptLabel:supportedPts[0], ptColor:cellColor, shiftLabel});
+    rotationSelections.push({agId, agName: findAgById(agId)?.name||agId, shiftRowId, dayIdx, dateStr: d.toISOString().slice(0,10), supportedPts, ptLabel:supportedPts[0], ptColor:cellColor, shiftLabel});
     cell.dataset.rotPt = supportedPts.join(', ');
     cell.classList.add(inRange?'rot-selected':'rot-amber');
   }
@@ -6361,6 +8352,8 @@ function renderRotationTally(){
     const el=document.getElementById(id);
     if(el) el.innerHTML=html;
   });
+  // Mirror live tally into tray composition panel
+  if(rotationMode) renderTrayComposition();
 }
 
 function updateRotationSummary(){
@@ -6437,6 +8430,33 @@ function applyPattern(name){
   updateRotationSummary();
 }
 
+function saveAndReviewRotation(){
+  saveRotationPlacement();
+  // Hide rotation rail
+  const rail = document.getElementById('rotationRail');
+  if(rail) rail.classList.remove('open');
+  // Open finalise panel — openPanel picks up the rotation draft just pushed
+  const allDrafts = allocDraftPlacements.filter(d=>d.reqId===currentAllocReqId && (!d.status||d.status==='draft'));
+  if(!allDrafts.length) return;
+  spSupervisorIdx = null;
+  const seen = new Map();
+  allDrafts.forEach(d=>{
+    if(!seen.has(d.agId)){
+      const ag = findAgById(d.agId);
+      seen.set(d.agId, { agId:d.agId, agName: ag ? ag.name : d.agId, drafts:[] });
+    }
+    seen.get(d.agId).drafts.push(d);
+  });
+  spAgGroups = [...seen.values()];
+  // Jump directly to the last group (the rotation just saved)
+  spAgIdx = spAgGroups.length - 1;
+  renderPanel();
+  document.getElementById('spOverlay').classList.add('open');
+  document.getElementById('sidePanel').classList.add('open');
+  const body = document.getElementById('spBody');
+  if(body) body.scrollTop = 0;
+}
+
 function saveRotationPlacement(){
   if(!rotationSelections.length) return;
   const r = REQ_META[currentAllocReqId];
@@ -6507,11 +8527,7 @@ function saveRotationPlacement(){
   // Check if more placements needed
   const remaining = r.qty - (r.allocated||0);
   if(remaining > 0){
-    // Show "next placement" frame with clear progress indicator
     renderRotationTally();
-    showRotationFrame('Empty');
-    // Update empty state to show progress
-    // Show progress bar for next placement
     renderRotationProgress();
   } else {
     // All placements drafted — show Review button
@@ -6539,6 +8555,15 @@ function confirmRotation(){
   resetFulfillmentMode();
 }
 
+function setDensity(mode, btn){
+  condensedView = mode === 'condensed';
+  document.getElementById('densityNormal')?.classList.toggle('active', !condensedView);
+  document.getElementById('densityCondensed')?.classList.toggle('active', condensedView);
+  const screen = document.getElementById('screen-grid');
+  if(screen) screen.classList.toggle('condensed', condensedView);
+}
+
+
 /* ─── INIT ──────────────────────────────────────── */
 onRegionChange();
 loadGrid();
@@ -6557,10 +8582,11 @@ loadGrid();
     <button class="ep-close" onclick="toggleEp()" title="Close">×</button>
   </div>
   <div class="ep-legend" id="epLegend">
-    <span class="ep-leg-item"><span class="ep-leg-dot" style="background:rgba(255,165,0,0.3)"></span>Offered</span>
-    <span class="ep-leg-item"><span class="ep-leg-dot" style="background:rgba(0,128,0,0.3)"></span>Accepted</span>
-    <span class="ep-leg-item"><span class="ep-leg-dot" style="background:rgba(0,0,255,0.3)"></span>Published</span>
-    <span class="ep-leg-item"><span class="ep-leg-dot" style="background:rgba(128,128,128,0.3)"></span>Cancelled</span>
+    <span class="ep-leg-item"><span class="ep-leg-dot" style="background:rgba(198,40,40,0.25)"></span>Pending</span>
+    <span class="ep-leg-item"><span class="ep-leg-dot" style="background:rgba(255,152,0,0.35)"></span>Offered</span>
+    <span class="ep-leg-item"><span class="ep-leg-dot" style="background:rgba(33,150,243,0.3)"></span>Planned</span>
+    <span class="ep-leg-item"><span class="ep-leg-dot" style="background:rgba(80,80,80,0.25)"></span>Rejected</span>
+    <span class="ep-leg-item"><span class="ep-leg-dot" style="background:rgba(158,158,158,0.25)"></span>Cancelled</span>
   </div>
   <div class="ep-body" id="epBody">
     <div class="ep-empty">Load the grid to see EP fairness</div>
